@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3 uid="uid://bcfe3r5hwbt11"]
+
+[ext_resource type="PackedScene" uid="uid://bdbranrjl5oll" path="res://hand.tscn" id="1_g0cte"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g5eoo"]
+size = Vector2(20, 17.4857)
+
+[node name="Battle Node" type="Node2D"]
+
+[node name="Background" type="ColorRect" parent="."]
+offset_left = -403.0
+offset_top = -321.0
+offset_right = 397.0
+offset_bottom = 279.0
+pivot_offset = Vector2(400, 300)
+mouse_filter = 2
+color = Color(0.316422, 0.207686, 0.0924316, 1)
+
+[node name="Card Play Area" type="Area2D" parent="."]
+position = Vector2(-26, -124)
+scale = Vector2(47.3927, 27.7073)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Card Play Area"]
+position = Vector2(0.633009, 1.38026)
+scale = Vector2(0.95825, 0.969106)
+shape = SubResource("RectangleShape2D_g5eoo")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Hand" parent="." instance=ExtResource("1_g0cte")]
+position = Vector2(-302, 225)
+card_spacing = 280

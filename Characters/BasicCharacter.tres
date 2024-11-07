@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="PlayerClassData" load_steps=6 format=3 uid="uid://dsgvvakdja2x6"]
+
+[ext_resource type="Script" path="res://Characters/PlayerClassData.gd" id="1_iw4pe"]
+[ext_resource type="Script" path="res://Cards/BaseCard.gd" id="2_bpfir"]
+[ext_resource type="Resource" uid="uid://c5li2x1h26lbg" path="res://Cards/StrikeCard.tres" id="2_jlio8"]
+[ext_resource type="Resource" uid="uid://2np2ig0mjjki" path="res://Cards/SeekCard.tres" id="3_1f1yh"]
+[ext_resource type="Resource" uid="uid://5v2dxbh1vw72" path="res://Cards/CopperCard.tres" id="4_nlq68"]
+
+[resource]
+script = ExtResource("1_iw4pe")
+name = "Basic"
+starting_health = 10
+starting_mana = 3
+starting_hand_size = 5
+starting_cards = Array[ExtResource("2_bpfir")]([ExtResource("3_1f1yh"), ExtResource("2_jlio8"), ExtResource("2_jlio8"), ExtResource("4_nlq68"), ExtResource("4_nlq68"), ExtResource("4_nlq68"), ExtResource("4_nlq68"), ExtResource("4_nlq68"), ExtResource("2_jlio8"), ExtResource("2_jlio8")])

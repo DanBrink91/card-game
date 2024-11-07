@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="HeavyStrikeCard" load_steps=3 format=3 uid="uid://4udb3s6wkgc8"]
+
+[ext_resource type="Script" path="res://Cards/HeavyStrikeCard.gd" id="1_itxcq"]
+[ext_resource type="Texture2D" uid="uid://i20b8xfy3y4o" path="res://Art/Cards/face_on_cross.png" id="2_sb0tq"]
+
+[resource]
+script = ExtResource("1_itxcq")
+damage = 5
+name = "Heavy Strike"
+description = "Deals Damage"
+cost = 2
+price = 3
+texture = ExtResource("2_sb0tq")
+target_type = 0

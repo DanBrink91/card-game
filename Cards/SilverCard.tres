@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CopperCard" load_steps=3 format=3 uid="uid://c3yghsyhxvens"]
+
+[ext_resource type="Script" path="res://Cards/CopperCard.gd" id="1_lxitt"]
+[ext_resource type="Texture2D" uid="uid://bculkknd4piyb" path="res://Art/Cards/faceon_silver_coin.png" id="2_unamy"]
+
+[resource]
+script = ExtResource("1_lxitt")
+value = 2
+name = "Silver"
+description = "Gain Money"
+cost = 0
+price = 2
+texture = ExtResource("2_unamy")
+target_type = 5

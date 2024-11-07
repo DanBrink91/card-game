@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="StrikeCard" load_steps=3 format=3 uid="uid://c5li2x1h26lbg"]
+
+[ext_resource type="Texture2D" uid="uid://bfqm02a8dvu3j" path="res://Art/Cards/infernus_dolphin_112x112.png" id="1_agaf3"]
+[ext_resource type="Script" path="res://Cards/StrikeCard.gd" id="1_wianw"]
+
+[resource]
+script = ExtResource("1_wianw")
+damage = 2
+name = "Strike"
+description = "Deals Damage"
+cost = 1
+price = 0
+texture = ExtResource("1_agaf3")
+target_type = 0

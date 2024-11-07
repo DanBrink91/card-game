@@ -1,0 +1,62 @@
+[gd_scene load_steps=3 format=3 uid="uid://djkfjsqv5kxgi"]
+
+[ext_resource type="Script" path="res://Core/main_menu.gd" id="1_s1lgn"]
+[ext_resource type="Texture2D" uid="uid://d2yxaypuw32k7" path="res://icon.svg" id="2_d6a0p"]
+
+[node name="Main Menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_s1lgn")
+
+[node name="MainMenuContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 270
+
+[node name="MenuButtons" type="VBoxContainer" parent="MainMenuContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MainMenuContainer/MenuButtons"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 15
+
+[node name="JoinLobbyButton" type="Button" parent="MainMenuContainer/MenuButtons/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Join Lobby"
+
+[node name="MarginContainer2" type="MarginContainer" parent="MainMenuContainer/MenuButtons"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 15
+
+[node name="HostLobbyButton" type="Button" parent="MainMenuContainer/MenuButtons/MarginContainer2"]
+layout_mode = 2
+text = "Host Lobby"
+
+[node name="PartyContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
+theme_override_constants/margin_left = 125
+theme_override_constants/margin_bottom = 80
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PartyContainer"]
+layout_mode = 2
+
+[node name="PlayerAvatarContainer" type="MarginContainer" parent="PartyContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_right = 2
+
+[node name="PlayerAvatar" type="Sprite2D" parent="PartyContainer/HBoxContainer/PlayerAvatarContainer"]
+unique_name_in_owner = true
+texture = ExtResource("2_d6a0p")

@@ -1,0 +1,47 @@
+[gd_scene load_steps=4 format=3 uid="uid://jd3vdhm1oatp"]
+
+[ext_resource type="Script" path="res://Core/lobby.gd" id="1_fnhhr"]
+[ext_resource type="Script" path="res://Characters/PlayerClassData.gd" id="2_hluwx"]
+[ext_resource type="Resource" uid="uid://dsgvvakdja2x6" path="res://Characters/BasicCharacter.tres" id="3_il27t"]
+
+[node name="Lobby" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fnhhr")
+characters = Array[ExtResource("2_hluwx")]([ExtResource("3_il27t")])
+
+[node name="PlayerContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(300, 1080)
+layout_mode = 1
+offset_right = 300.0
+offset_bottom = 1080.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+custom_minimum_size = Vector2(600, 300)
+layout_mode = 0
+offset_left = 300.0
+offset_top = 400.0
+offset_right = 1800.0
+offset_bottom = 700.0
+vertical_scroll_mode = 0
+
+[node name="CharacterContainer" type="HBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ExitButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -125.0
+offset_top = 38.0
+offset_right = -20.0
+offset_bottom = 88.0
+grow_horizontal = 0
+text = "Leave Lobby"

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="SeekCard" load_steps=4 format=3 uid="uid://2np2ig0mjjki"]
+
+[ext_resource type="Script" path="res://Cards/SeekCard.gd" id="1_8kl2g"]
+[ext_resource type="PackedScene" uid="uid://bparwac5tbwpq" path="res://Scenes/card_modal.tscn" id="1_tp2ik"]
+[ext_resource type="Texture2D" uid="uid://cdav8attpc8k8" path="res://Art/Cards/tilted_green_tick.png" id="3_a7bkt"]
+
+[resource]
+script = ExtResource("1_8kl2g")
+cards_to_draw = 1
+cardModalScene = ExtResource("1_tp2ik")
+name = "Seek"
+description = "Choose a card from your deck and add it to your hand"
+cost = 1
+price = 3
+texture = ExtResource("3_a7bkt")
+target_type = 5

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CopperCard" load_steps=3 format=3 uid="uid://5v2dxbh1vw72"]
+
+[ext_resource type="Script" path="res://Cards/CopperCard.gd" id="1_6fetk"]
+[ext_resource type="Texture2D" uid="uid://burl2ya11jyae" path="res://Art/Cards/bronze_trophy.png" id="2_vxtc5"]
+
+[resource]
+script = ExtResource("1_6fetk")
+value = 1
+name = "Copper"
+description = "Gain 1 Money"
+cost = 0
+price = 0
+texture = ExtResource("2_vxtc5")
+target_type = 5
