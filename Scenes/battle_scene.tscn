@@ -18,7 +18,7 @@
 [ext_resource type="Resource" uid="uid://c0axljudxfyag" path="res://Cards/GoldCard.tres" id="14_ymg17"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g5eoo"]
-size = Vector2(43.6282, 33.1455)
+size = Vector2(43.6282, 31.5068)
 
 [node name="Battle Node" type="Node2D"]
 script = ExtResource("1_vpkew")
@@ -38,7 +38,7 @@ position = Vector2(-26, -124)
 scale = Vector2(47.3927, 27.7073)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Card Play Area"]
-position = Vector2(-0.0784134, 1.2993)
+position = Vector2(-0.0784134, 0.505283)
 scale = Vector2(0.960782, 0.969106)
 shape = SubResource("RectangleShape2D_g5eoo")
 

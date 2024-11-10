@@ -32,13 +32,12 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -442.0
+offset_left = -421.0
 offset_top = -68.0
-offset_right = -382.0
-offset_bottom = 12.0
+offset_right = 419.0
+offset_bottom = 132.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(14.5562, 2.83913)
 alignment = 1
 
 [node name="Button" type="Button" parent="."]

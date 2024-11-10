@@ -2,11 +2,12 @@ extends Control
 
 
 @export var characters: Array[PlayerClassData] = []
+@export var game_scene: PackedScene
 
 @onready var PlayerContainer: Container = $PlayerContainer
 @onready var CharacterContainer: Container = $ScrollContainer/CharacterContainer
 @onready var ExitButton: Button = $ExitButton
-
+@onready var StartGameButton: Button = $StartGameButton
 var lobby_id: int = 0
 var steam_id: int = -1
 var lobby_members: Array = []
@@ -17,6 +18,7 @@ var is_ready: bool = false
 var character_selected: PlayerClassData
 
 var steamid_to_avatar: Dictionary = {}
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	steam_id = GlobalSteam.steam_id
@@ -24,6 +26,8 @@ func _ready() -> void:
 	get_lobby_members()
 	updateLobbyMembers()
 	ExitButton.pressed.connect(leave_lobby)
+	StartGameButton.pressed.connect(start_game)
+	
 	Steam.avatar_loaded.connect(_on_loaded_avatar)
 	Steam.lobby_chat_update.connect(_on_lobby_chat_update)
 	Steam.lobby_data_update.connect(_on_lobby_data_update)
@@ -64,10 +68,13 @@ func addCharacters() -> void:
 		container.mouse_exited.connect(Callable(_on_character_hover_exit).bind(container, character))
 		container.gui_input.connect(_on_character_click.bind(container, character))
 
-func _handle_network_packet(sender, data):
-	match data.type:
-		GlobalSteam.GAME_PACKET_TYPE.LOBBY_CHARACTER_UPDATE:
-			pass
+func _handle_network_packet(sender, data: Dictionary):
+	if data.has("type"):
+		match data.type:
+			GlobalSteam.GAME_PACKET_TYPE.LOBBY_CHARACTER_UPDATE:
+				pass
+			GlobalSteam.GAME_PACKET_TYPE.LOBBY_START:
+				start_game()
 
 func createLobbyMember(member) -> void:
 	# Send request for their avatar
@@ -211,6 +218,7 @@ func _on_lobby_chat_update(this_lobby_id: int, change_id: int, making_change_id:
 		print("%s did... something." % changer_name)
 
 	# Update the lobby now that a change has occurred
+	GlobalSteam.update_lobby_members()
 	get_lobby_members()
 
 func _on_lobby_data_update(success: int, this_lobby_id: int, member_id: int) -> void:
@@ -239,6 +247,7 @@ func leave_lobby() -> void:
 
 		# Wipe the Steam lobby ID then display the default lobby ID and player list title
 		lobby_id = 0
+		GlobalSteam.lobby_id = 0
 
 		# Close session with all users
 		for this_member in lobby_members:
@@ -256,3 +265,10 @@ func leave_lobby() -> void:
 		main_menu_scene._on_lobby_match_list([])
 		self.queue_free()
 		
+func start_game() -> void:
+	GlobalSteam.send_p2p_packet(0, {"type": GlobalSteam.GAME_PACKET_TYPE.LOBBY_START})
+	var game_nodes = game_scene.instantiate()
+	var game: Game = game_nodes.get_node("Game")
+	game.lobby_id = lobby_id
+	get_tree().root.add_child(game_nodes)
+	self.queue_free()

@@ -24,12 +24,15 @@ func placeShopCards() -> void:
 	var x := 0
 	var y := 0
 	for card in MoneyCards + SpellCards:
+		print("placing shop cards")
 		var card_instance = ShopNodeScene.instantiate() as Shop_Card
 		card_instance.card_data = card.duplicate()
-		card_instance.position = Vector2(x * cardXSpacing, y * cardYSpacing)
-		card_instance.card_clicked.connect(_handle_card_click)
+		print(card_instance.size)
+		card_instance.position = Vector2(x * card_instance.size.x, y * card_instance.size.y)
 		shop_cards.append(card_instance)
 		add_child(card_instance)
+		card_instance.card_clicked.connect(_handle_card_click)
+		card_instance.refresh_display()
 		if x + 1 >= cardRowCount:
 			y += 1
 			x = 0
@@ -37,10 +40,11 @@ func placeShopCards() -> void:
 			x += 1
 
 func _handle_card_click(card: Shop_Card) -> void:
+	print("shop card clicked")
 	var buyer: Node2D = game.get_current_entity()
 	if buyer is Enemy or card.stock <= 0: return # ignore attempts to buy during the enemy's turn
 	if buyer.is_remote: return # you can't buy
-	var card_data = card.card_data
+	var card_data = card.card_node.card_data
 	print("Buyer has %s money, Price is %s" % [buyer.money, card_data.price])
 	# Buy the card
 	if buyer.money >= card_data.price:
@@ -53,7 +57,7 @@ func _handle_card_click(card: Shop_Card) -> void:
 
 func _handle_remote_card_buy(player: Player, card_index: int) -> void:
 	var shop_card:Shop_Card = shop_cards[card_index]
-	var card: BaseCard = shop_card.card_data
+	var card: BaseCard = shop_card.card_node.card_data
 	player.buy_card(card)
 	shop_card.stock -= 1
 	shop_card.refresh_display()

@@ -19,6 +19,11 @@ config/icon="res://icon.svg"
 
 GlobalSteam="*res://Core/steam.gd"
 
+[debug]
+
+file_logging/enable_file_logging=true
+file_logging/log_path="user://logs/card_game.log"
+
 [display]
 
 window/size/viewport_width=1920

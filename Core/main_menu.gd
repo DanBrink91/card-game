@@ -82,7 +82,7 @@ func _on_lobby_match_list(these_lobbies: Array) -> void:
 		# Make message go away after time
 		await get_tree().create_timer(2.0).timeout
 		button_container.queue_free()
-		
+		return
 	for this_lobby in these_lobbies:
 		# Pull lobby data from Steam, these are specific to our example
 		var lobby_name: String = Steam.getLobbyData(this_lobby, "name")
@@ -118,6 +118,9 @@ func _on_lobby_invite(inviter: int, this_lobby_id: int, game_id: int) -> void:
 func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, response: int) -> void:
 	# If joining was successful
 	if response == Steam.CHAT_ROOM_ENTER_RESPONSE_SUCCESS:
+		GlobalSteam.lobby_id = this_lobby_id
+		GlobalSteam.update_lobby_members()
+		GlobalSteam.make_p2p_handshake()
 		# Set this lobby ID as your lobby ID
 		lobby_id = this_lobby_id
 		var lobby_nodes = lobby_scene.instantiate()

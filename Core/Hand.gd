@@ -12,6 +12,7 @@ signal card_bad_target(card: CardNode)
 @onready var player: Player = get_parent() as Player
 @onready var drop_area: Area2D = get_node('/root/Battle Node/Card Play Area')
 
+var hovered_card: CardNode = null
 var dragged_card: CardNode = null
 var drag_offset: Vector2 = Vector2.ZERO
 var start_pos: Vector2 = Vector2.ZERO
@@ -34,8 +35,13 @@ func add_card(card: CardNode) -> void:
 	var card_instance = card_scene.instantiate() as CardNode
 	card_instance.card_data = card.card_data
 	card = card_instance
-	card.position = Vector2(cards.size() * card_spacing, 0)
+	
+	card.position = Vector2(cards.size() * card.size.x / 2,  -card.size.y / 2)
 	card.card_clicked.connect(_on_card_clicked)
+	
+	card.mouse_entered.connect(_on_card_hovered.bind(card))
+	card.mouse_exited.connect(_on_card_unhovered.bind(card))
+	
 	cards.append(card)
 	add_child(card)
 
@@ -51,10 +57,25 @@ func remove_card(card: BaseCard) -> void:
 func reorder_cards() -> void:
 	var i:int = 0
 	for card in cards:
-		card.position = Vector2(i * card_spacing, 0)
+		card.position = Vector2(i * card.size.x / 2,  -card.size.y / 2)
 		i += 1
 
+func _on_card_hovered(card: CardNode) -> void:
+	if dragged_card != null: return # If we're dragging we don't care about hover
+	var hovered_card_index = cards.find(card)
+	for i in range(cards.size()):
+		if i == hovered_card_index: continue
+		var diff = i - hovered_card_index
+		if diff > 0:
+			cards[i].position.x +=  cards[i].size.x / 2 + 10
+		else:
+			cards[i].position.x -=  cards[i].size.x / 2 + 10
 
+		#cards[i].rotation = diff * 15
+	
+func _on_card_unhovered(unhovered_card: CardNode) -> void:
+	if dragged_card: return
+	reorder_cards()
 
 func _input(event):
 	# Check for drag-and-drop logic within the hand
@@ -62,7 +83,7 @@ func _input(event):
 		update_drag()
 	elif event is InputEventMouseButton and not event.pressed and dragged_card:
 		end_drag(event.position)
-
+		
 #func _on_drop_area_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	#if event is InputEventMouseButton and event.is_released and dragged_card:
 		#emit_signal("card_dropped", dragged_card)
@@ -117,6 +138,6 @@ func reset_drag():
 func find_target(group: String) -> Node2D:
 	for target in get_tree().get_nodes_in_group(group):
 		var target_area := target.get_node('Area2D')
-		if target_area and dragged_card.overlaps_area(target_area):
+		if target_area and dragged_card.area.overlaps_area(target_area):
 			return target
 	return null

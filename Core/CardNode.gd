@@ -1,22 +1,26 @@
 # CardNode.gd
-extends Area2D
+extends Control
 class_name CardNode
 
 signal card_clicked(card_node:CardNode)
+signal card_hovered(card_node:CardNode)
+signal card_double_clicked(card_node:CardNode)
 
 var card_data: BaseCard = null  # Reference to the base card resource
 
 # References to label nodes for displaying card information
-@onready var name_label: RichTextLabel = $Name
-@onready var description_label: RichTextLabel = $Description
-@onready var cost_label: RichTextLabel = $EnergyCost
-@onready var price_label: RichTextLabel = $Price
+@onready var name_label: RichTextLabel = $NameContainer/Name
+@onready var description_label: RichTextLabel = $DescriptionContainer/Description
+@onready var cost_label: RichTextLabel = $VBoxContainer/EnergyContainer/EnergyCost
+@onready var price_label: RichTextLabel = $VBoxContainer/PriceContainer/Price
 @onready var sprite: Sprite2D = $Sprite
-@onready var collision_shape: CollisionShape2D = $CollisionShape2D  
+@onready var area: Area2D = $Area2D
+@onready var collision_shape: CollisionShape2D = $Area2D/CollisionShape2D
 
 
 func _ready():
-	input_event.connect(_on_input_event)
+	#area.input_event.connect()
+	gui_input.connect(_on_gui_input_event)
 	if card_data:
 		card_data.stats_updated.connect(self.refresh_display)
 	# Initialize the display when the node is ready
@@ -27,9 +31,12 @@ func set_card_data(new_card_data: BaseCard):
 	await self.ready # Make sure the children nodes are ready before we update them
 	refresh_display()
 
-func _on_input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
-	# Emit the card_clicked signal only if it was a left-click
-	if event is InputEventMouseButton and event.pressed:
+
+
+func _on_gui_input_event(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.double_click:
+		card_double_clicked.emit(self)
+	elif event is InputEventMouseButton and event.pressed:
 		card_clicked.emit(self)
 
 func refresh_display():

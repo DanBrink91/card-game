@@ -16,15 +16,23 @@ var steam_username: String
 var lobby_id: int = 0
 var lobby_members: Array
 
-enum GAME_PACKET_TYPE {LOBBY_CHARACTER_UPDATE, GAME_CARD_PLAY, GAME_MODAL_UPDATE, GAME_CARD_BUY}
+enum GAME_PACKET_TYPE {LOBBY_CHARACTER_UPDATE,
+ LOBBY_START,
+ GAME_CARD_PLAY,
+ GAME_MODAL_UPDATE,
+ GAME_CARD_BUY,
+ GAME_END_TURN,
+GAME_ENEMY_DECIDE,
+GAME_SEED,
+GAME_HOST_SHUFFLE_REQUEST,
+GAME_HOST_SHUFFLE_RESPONSE}
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	initialize_steam()
 	check_command_line()
 	Steam.p2p_session_request.connect(_on_p2p_session_request)
 	Steam.p2p_session_connect_fail.connect(_on_p2p_session_connect_fail)
-	#Steam.lobby_joined.connect(_on_lobby_joined)
-	#Steam.lobby_chat_update.connect(_on_lobby_chat_update)
 
 func check_command_line() -> void:
 	var these_arguments: Array = OS.get_cmdline_args()
@@ -91,7 +99,7 @@ func read_p2p_packet() -> void:
 
 		# Get the remote user's ID
 		var packet_sender: int = this_packet['remote_steam_id']
-
+		
 		# Make the packet data readable
 		var packet_code: PackedByteArray = this_packet['data']
 
@@ -99,7 +107,7 @@ func read_p2p_packet() -> void:
 		var readable_data: Dictionary = bytes_to_var(packet_code.decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP))
 
 		# Print the packet to output
-		print("Packet: %s" % readable_data)
+		print("Packet: %s from %s" % [readable_data,packet_sender])
 
 		# Append logic here to deal with packet data
 		network_packet.emit(packet_sender, readable_data)
@@ -123,6 +131,8 @@ func send_p2p_packet(target: int, packet_data: Dictionary) -> void:
 			# Loop through all members that aren't you
 			for this_member in lobby_members:
 				if this_member['steam_id'] != steam_id:
+					print("Sending Packet %s from %s to %s" % [packet_data, steam_id, this_member['steam_id']])
+
 					Steam.sendP2PPacket(this_member['steam_id'], this_data, send_type, channel)
 
 	# Else send it to someone specific
@@ -188,3 +198,15 @@ func get_lobby_members() -> void:
 		var member_steam_name: String = Steam.getFriendPersonaName(member_steam_id)
 		
 		lobby_members.append({"steam_id": member_steam_id, "steam_name": member_steam_name})
+
+func update_lobby_members() -> void:
+	lobby_members.clear()
+	
+	var num_of_members: int = Steam.getNumLobbyMembers(lobby_id)
+	
+	for this_member in range(0, num_of_members):
+		var member_steam_id: int = Steam.getLobbyMemberByIndex(lobby_id, this_member)
+		var member_steam_name: String = Steam.getFriendPersonaName(member_steam_id)
+		lobby_members.append({"steam_id": member_steam_id, "steam_name": member_steam_name})
+
+	

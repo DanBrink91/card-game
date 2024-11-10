@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://jd3vdhm1oatp"]
+[gd_scene load_steps=5 format=3 uid="uid://jd3vdhm1oatp"]
 
 [ext_resource type="Script" path="res://Core/lobby.gd" id="1_fnhhr"]
 [ext_resource type="Script" path="res://Characters/PlayerClassData.gd" id="2_hluwx"]
 [ext_resource type="Resource" uid="uid://dsgvvakdja2x6" path="res://Characters/BasicCharacter.tres" id="3_il27t"]
+[ext_resource type="PackedScene" uid="uid://bcfe3r5hwbt11" path="res://Scenes/battle_scene.tscn" id="4_wjax1"]
 
 [node name="Lobby" type="Control"]
 layout_mode = 3
@@ -13,6 +14,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_fnhhr")
 characters = Array[ExtResource("2_hluwx")]([ExtResource("3_il27t")])
+game_scene = ExtResource("4_wjax1")
 
 [node name="PlayerContainer" type="VBoxContainer" parent="."]
 custom_minimum_size = Vector2(300, 1080)
@@ -45,3 +47,11 @@ offset_right = -20.0
 offset_bottom = 88.0
 grow_horizontal = 0
 text = "Leave Lobby"
+
+[node name="StartGameButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1749.0
+offset_top = 905.0
+offset_right = 1845.0
+offset_bottom = 936.0
+text = "Start Game"
