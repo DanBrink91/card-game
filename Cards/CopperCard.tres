@@ -7,7 +7,7 @@
 script = ExtResource("1_6fetk")
 value = 1
 name = "Copper"
-description = "Gain 1 Money"
+description = "Gain %d Money"
 cost = 0
 price = 0
 texture = ExtResource("2_vxtc5")

@@ -8,12 +8,14 @@ signal remote_card_buy(player: Player, card_index: int)
 signal remote_modal_select(card_index: int)
 signal remote_modal_confirm
 signal remote_enemy_decide(target_index: int)
-signal remote_host_shuffle(deck: Array[BaseCard])
+signal remote_host_shuffle(deck: Array)
 
 @export var player_characters: Array[PlayerClassData] = []
 @export var player_scene: PackedScene  # Scene file for each player
 @export var enemy_scene: PackedScene  # Scene file for each enemy
 @export var enemy_count: int = 3  # Define the number of enemies
+
+@export var end_game_scene: PackedScene
 
 var players: Array[Player] = []
 var enemies: Array[Enemy] = []
@@ -21,7 +23,7 @@ var enemies: Array[Enemy] = []
 @onready var player_spawn: Node2D = $PlayerSpawn
 @onready var enemy_spawn: Node2D = $EnemySpawn
 @onready var end_turn_button: TextureButton = $EndTurnButton
-
+@onready var stats: Stats = $Stats
 
 var player_count := 0
 var current_player_index: int = 0
@@ -34,6 +36,7 @@ var steamid_to_player: Dictionary = {}
 var is_host: bool = false
 
 var host_id: int
+var game_start_time: float
 
 func get_card_id() -> int:
 	card_count += 1
@@ -45,6 +48,7 @@ func _ready():
 	GlobalSteam.network_packet.connect(_handle_network_data)
 
 func setup() -> void:
+	game_start_time = Time.get_unix_time_from_system()
 	setup_game()
 	connect_signals()
 	start_turn()
@@ -73,19 +77,24 @@ func setup_game():
 		enemies.append(enemy)
 		add_child(enemy)
 		enemy.add_to_group("enemies")
+		stats.add_enemy_entry(enemy)
+		
+		enemy.all_player_death.connect(end_game.bind(false))
+		enemy.enemy_death.connect(end_game.bind(true))
 
 func connect_signals():
-	for player in players:
-		player.turn_ended.connect(_on_turn_ended)
+	#for player in players:
+		#player.turn_ended.connect(_on_turn_ended)
 	for enemy in enemies:
 		enemy.turn_ended.connect(_on_turn_ended)
 
 func start_turn():
 	var current_entity = get_current_entity()
-	turn_started.emit(current_entity)  # Signal to start the turn
-	current_entity.start_turn()
-	
 	end_turn_button.visible = current_entity is Player and not current_entity.is_remote
+
+	turn_started.emit(current_entity)  # Signal to start the turn
+	await current_entity.start_turn()
+	
 
 func get_current_entity() -> Node:
 	if current_player_index < players.size():
@@ -94,6 +103,7 @@ func get_current_entity() -> Node:
 
 # When the button is pressed this fires
 func _on_turn_ended():
+	print("_on_turn_ended")
 	var current_entity = get_current_entity()
 	# you cant end on someone elses turn
 	if current_entity is Player and current_entity.is_remote: return
@@ -101,6 +111,7 @@ func _on_turn_ended():
 
 # This handles actually ending the turn, can be called remotely
 func end_turn() -> void:
+	print("Game end_turn")
 	var current_entity = get_current_entity()
 	turn_ended.emit()
 	if current_entity is Player:
@@ -113,7 +124,8 @@ func end_turn() -> void:
 	current_player_index += 1
 	if current_player_index >= (players.size() + enemies.size()):
 		current_player_index = 0  # Reset for new round
-	start_turn()
+	print("Turn ending, starting next one... %d" % current_player_index)
+	await start_turn()
 	
 func _handle_network_data(sender, data):
 	var player: Player = steamid_to_player[sender]
@@ -151,19 +163,21 @@ func _handle_network_data(sender, data):
 				end_turn()
 			# In progress, host deciding enemy turn
 			GlobalSteam.GAME_PACKET_TYPE.GAME_ENEMY_DECIDE:
+				enemies[0].remote_target_index = data.target_index
 				remote_enemy_decide.emit(data.target_index)
 			GlobalSteam.GAME_PACKET_TYPE.GAME_SEED:
+				print("game seed %d" % data.seed)
 				seed(data.seed)
 			GlobalSteam.GAME_PACKET_TYPE.GAME_HOST_SHUFFLE_REQUEST:
+				print("got game host shuffle request")
 				var target_player: Player = steamid_to_player[data.player]
 				host_shuffle(target_player)
 			GlobalSteam.GAME_PACKET_TYPE.GAME_HOST_SHUFFLE_RESPONSE:
+				print("Got game host shuffle response")
 				var deck_owner: Player = steamid_to_player[data.player]
 				var order: Array = data.order
-				var sorted_deck: Array[BaseCard]
-				for index in order:
-					sorted_deck.append(player.deck[index])
-				remote_host_shuffle.emit(sorted_deck)
+				deck_owner.saved_order = order
+				remote_host_shuffle.emit(order)
 
 func generate_players_from_lobby():
 	var lobby_num_members: int = Steam.getNumLobbyMembers(lobby_id)
@@ -185,7 +199,17 @@ func generate_players_from_lobby():
 		player.is_host = is_host
 		player.steam_id = member_id
 		steamid_to_player[member_id] = player
+		stats.add_player_entry(player)
 
+
+func end_game(victory: bool) -> void:
+	# TODO: Need to delay here???? Animation maybe???
+	var end_game_s = end_game_scene.instantiate()
+	end_game_s.victory = victory
+	end_game_s.create_table(stats.player_data)
+	get_tree().root.add_child(end_game_s)
+	get_parent().queue_free()
+	
 # This should only be called on the host
 func host_shuffle(player: Player):
 	var random_order = range(player.deck.size())

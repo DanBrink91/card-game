@@ -6,10 +6,17 @@ class_name SeekCard
 
 func play(player:Player, target) -> void:
 	print("Seek Card Played")
+	if player.deck.size() == 0:
+		return # You won't have any options!
+		#if player.discard.size() == 0:
+			#return # There's nothing you could possibly draw...
+		#else:
+			#await player.shuffle_discard_into_deck() # Shuffle discard
+	
 	var card_modal = cardModalScene.instantiate() as CardModal
 	card_modal.active_player = player
 	card_modal.game = player.game
-	
+
 	player.get_tree().root.add_child(card_modal)
 	
 	card_modal.global_position -= card_modal.size / 2

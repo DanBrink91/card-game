@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 GlobalSteam="*res://Core/steam.gd"
+Util="*res://Core/util.gd"
 
 [debug]
 

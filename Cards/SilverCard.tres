@@ -7,7 +7,7 @@
 script = ExtResource("1_lxitt")
 value = 2
 name = "Silver"
-description = "Gain Money"
+description = "Gain %d Money"
 cost = 0
 price = 2
 texture = ExtResource("2_unamy")

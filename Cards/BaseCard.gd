@@ -29,6 +29,9 @@ func calculate_modified_stats():
 func can_play(player) -> bool:
 	return player.mana >= cost
 
+func get_description() -> String:
+	return description
+
 # Abstract method for subclasses to implement
 func play(_player, _target) -> void:
 	push_error("play() method not implemented in BaseCard subclass.")

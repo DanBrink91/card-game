@@ -4,7 +4,7 @@ extends Panel
 signal modal_finished(finished: bool, cards: Array[BaseCard])
 
 @onready var label = $Label
-@onready var container = $HBoxContainer
+@onready var container = $ScrollContainer/HBoxContainer
 @onready var button = $Button
 
 var cardOptions: Array[BaseCard]

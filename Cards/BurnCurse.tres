@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BurnCurse" load_steps=3 format=3 uid="uid://csst3h8ybe8b"]
+
+[ext_resource type="Script" path="res://Cards/BurnCurse.gd" id="1_jncxn"]
+[ext_resource type="Texture2D" uid="uid://bk57cm3nmxd51" path="res://Art/Cards/skull2_1.png" id="2_fvo3e"]
+
+[resource]
+script = ExtResource("1_jncxn")
+damage = 1
+name = "Burn Curse"
+description = "Take %d Damage. Destroy This Card"
+cost = 0
+price = 0
+texture = ExtResource("2_fvo3e")
+target_type = 5

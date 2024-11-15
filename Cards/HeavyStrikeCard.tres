@@ -7,7 +7,7 @@
 script = ExtResource("1_itxcq")
 damage = 5
 name = "Heavy Strike"
-description = "Deals Damage"
+description = "Deals %d Damage"
 cost = 2
 price = 3
 texture = ExtResource("2_sb0tq")

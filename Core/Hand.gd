@@ -61,7 +61,7 @@ func reorder_cards() -> void:
 		i += 1
 
 func _on_card_hovered(card: CardNode) -> void:
-	if dragged_card != null: return # If we're dragging we don't care about hover
+	if dragged_card != null or card.in_preview_mode: return # If we're dragging we don't care about hover
 	var hovered_card_index = cards.find(card)
 	for i in range(cards.size()):
 		if i == hovered_card_index: continue
@@ -74,7 +74,7 @@ func _on_card_hovered(card: CardNode) -> void:
 		#cards[i].rotation = diff * 15
 	
 func _on_card_unhovered(unhovered_card: CardNode) -> void:
-	if dragged_card: return
+	if dragged_card or unhovered_card.in_preview_mode: return
 	reorder_cards()
 
 func _input(event):
