@@ -11,6 +11,6 @@ cardModalScene = ExtResource("1_tp2ik")
 name = "Seek"
 description = "Choose a card from your deck and add it to your hand"
 cost = 1
-price = 3
+price = 4
 texture = ExtResource("3_a7bkt")
 target_type = 5

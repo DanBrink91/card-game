@@ -9,6 +9,6 @@ value = 3
 name = "Gold"
 description = "Gain %d Money"
 cost = 0
-price = 5
+price = 4
 texture = ExtResource("2_jby5d")
 target_type = 5

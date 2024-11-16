@@ -4,23 +4,23 @@
 [ext_resource type="Script" path="res://Core/Game.gd" id="2_j1my3"]
 [ext_resource type="PackedScene" uid="uid://c7exwq3vd347l" path="res://Scenes/player.tscn" id="3_65xxr"]
 [ext_resource type="Script" path="res://turn_annoucement.gd" id="3_hrb2e"]
-[ext_resource type="Script" path="res://Characters/PlayerClassData.gd" id="4_1jxir"]
 [ext_resource type="PackedScene" uid="uid://xgi66exqcx7a" path="res://Scenes/enemy.tscn" id="5_280tv"]
-[ext_resource type="Resource" uid="uid://dsgvvakdja2x6" path="res://Characters/BasicCharacter.tres" id="5_sxyk8"]
 [ext_resource type="Texture2D" uid="uid://3w2e3i7xjlt3" path="res://Art/UI/end_turn.png" id="6_403jk"]
 [ext_resource type="Script" path="res://Core/Shop.gd" id="7_g6k3b"]
 [ext_resource type="PackedScene" uid="uid://bt1dvrjuicxl2" path="res://Scenes/shop_card.tscn" id="8_hb0tr"]
-[ext_resource type="PackedScene" uid="uid://dpykmbcbe6fvi" path="res://Cards/end_game.tscn" id="8_srsgc"]
+[ext_resource type="PackedScene" uid="uid://dpykmbcbe6fvi" path="res://Scenes/end_game.tscn" id="8_srsgc"]
 [ext_resource type="Script" path="res://Cards/BaseCard.gd" id="8_vnqge"]
 [ext_resource type="Resource" uid="uid://5v2dxbh1vw72" path="res://Cards/CopperCard.tres" id="9_lp4yw"]
 [ext_resource type="Resource" uid="uid://c5li2x1h26lbg" path="res://Cards/StrikeCard.tres" id="10_0xqow"]
 [ext_resource type="Resource" uid="uid://c3yghsyhxvens" path="res://Cards/SilverCard.tres" id="13_5hf6f"]
 [ext_resource type="Resource" uid="uid://4udb3s6wkgc8" path="res://Cards/HeavyStrikeCard.tres" id="14_fq4td"]
 [ext_resource type="Resource" uid="uid://c0axljudxfyag" path="res://Cards/GoldCard.tres" id="14_ymg17"]
+[ext_resource type="Resource" uid="uid://2np2ig0mjjki" path="res://Cards/SeekCard.tres" id="17_nwler"]
 [ext_resource type="Script" path="res://Core/stats.gd" id="17_qdt3d"]
+[ext_resource type="Resource" uid="uid://bq15kuiy8clui" path="res://Cards/RecycleCard.tres" id="18_fuhid"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g5eoo"]
-size = Vector2(43.6282, 31.5068)
+size = Vector2(43.6282, 28.453)
 
 [node name="Battle Node" type="Node2D"]
 script = ExtResource("1_vpkew")
@@ -40,7 +40,7 @@ position = Vector2(-26, -124)
 scale = Vector2(47.3927, 27.7073)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Card Play Area"]
-position = Vector2(-0.0784134, 0.505283)
+position = Vector2(-0.0784134, -0.97446)
 scale = Vector2(0.960782, 0.969106)
 shape = SubResource("RectangleShape2D_g5eoo")
 
@@ -64,7 +64,6 @@ script = ExtResource("3_hrb2e")
 
 [node name="Game" type="Node2D" parent="."]
 script = ExtResource("2_j1my3")
-player_characters = Array[ExtResource("4_1jxir")]([ExtResource("5_sxyk8"), ExtResource("5_sxyk8")])
 player_scene = ExtResource("3_65xxr")
 enemy_scene = ExtResource("5_280tv")
 enemy_count = 1
@@ -84,16 +83,19 @@ offset_bottom = 292.0
 texture_normal = ExtResource("6_403jk")
 
 [node name="Shop" type="Node2D" parent="Game"]
-position = Vector2(532, -372)
+position = Vector2(407, -479)
+scale = Vector2(0.8, 0.8)
 script = ExtResource("7_g6k3b")
 ShopNodeScene = ExtResource("8_hb0tr")
 MoneyCards = Array[ExtResource("8_vnqge")]([ExtResource("9_lp4yw"), ExtResource("13_5hf6f"), ExtResource("14_ymg17")])
-SpellCards = Array[ExtResource("8_vnqge")]([ExtResource("10_0xqow"), ExtResource("14_fq4td")])
+SpellCards = Array[ExtResource("8_vnqge")]([ExtResource("10_0xqow"), ExtResource("14_fq4td"), ExtResource("18_fuhid"), ExtResource("17_nwler")])
+cardRowCount = 4
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Game/Shop"]
-offset_top = -132.0
-offset_right = 200.0
-offset_bottom = -32.0
+offset_left = 201.25
+offset_top = -63.0
+offset_right = 401.25
+offset_bottom = 37.0
 theme_override_colors/default_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/normal_font_size = 42
 text = "Shop"

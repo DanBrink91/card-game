@@ -8,6 +8,7 @@ extends Control
 @onready var CharacterContainer: Container = $ScrollContainer/CharacterContainer
 @onready var ExitButton: Button = $ExitButton
 @onready var StartGameButton: Button = $StartGameButton
+
 var lobby_id: int = 0
 var steam_id: int = -1
 var lobby_members: Array = []
@@ -33,8 +34,10 @@ func _ready() -> void:
 	Steam.lobby_data_update.connect(_on_lobby_data_update)
 	#Steam.lobby_message.connect(_on_lobby_message)
 	GlobalSteam.network_packet.connect(_handle_network_packet)
+	character_selected = characters[0]
 
 func addCharacters() -> void:
+	var index := 0
 	for character in characters:
 		# Overall container for background + label
 		var container: Container = Container.new()
@@ -54,7 +57,7 @@ func addCharacters() -> void:
 		
 		# Background Color Rect
 		var color_rect: ColorRect = ColorRect.new()
-		color_rect.color = Color.ALICE_BLUE
+		color_rect.color = Color.ALICE_BLUE if index > 0 else Color.AQUAMARINE
 		color_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 		color_rect.mouse_filter =Control.MOUSE_FILTER_IGNORE
 		
@@ -63,10 +66,12 @@ func addCharacters() -> void:
 		color_rect.add_child(center)
 		container.add_child(color_rect)
 		CharacterContainer.add_child(container)
+		
 		# Some events
-		container.mouse_entered.connect(Callable(_on_character_hover).bind(container, character))
-		container.mouse_exited.connect(Callable(_on_character_hover_exit).bind(container, character))
-		container.gui_input.connect(_on_character_click.bind(container, character))
+		container.mouse_entered.connect(Callable(_on_character_hover).bind(container, index))
+		container.mouse_exited.connect(Callable(_on_character_hover_exit).bind(container, index))
+		container.gui_input.connect(_on_character_click.bind(container, index))
+		index += 1
 
 func _handle_network_packet(sender, data: Dictionary):
 	if data.has("type"):
@@ -107,7 +112,7 @@ func createLobbyMember(member) -> void:
 	character_label.size_flags_vertical = Control.SIZE_FILL
 	character_label.size_flags_horizontal = Control.SIZE_FILL
 	character_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	character_label.text = member.character
+	character_label.text = characters[int(member.character)].name
 	
 	character_container.add_child(character_label)
 	
@@ -156,29 +161,26 @@ func _on_loaded_avatar(user_id: int, avatar_size: int, avatar_buff: PackedByteAr
 	if found_member :
 		PlayerContainer.get_child(member_index).get_child(1).get_child(0).set_texture(avatar_texture)
 	
-func _on_character_hover(container: Container, character: PlayerClassData) -> void:
+func _on_character_hover(container: Container, index: int) -> void:
+	var character: PlayerClassData = characters[index]
 	print("Hovering over class: %s" % character.name)
 
-func _on_character_hover_exit(container: Container, character: PlayerClassData) -> void:
+func _on_character_hover_exit(container: Container, index: int) -> void:
+	var character: PlayerClassData = characters[index]
 	print("No longer hovering over class: %s" % character.name)
 
-func _on_character_click(event: InputEvent, container: Container, character: PlayerClassData):
+func _on_character_click(event: InputEvent, container: Container, index: int):
+	var character: PlayerClassData = characters[index]
 	if event is InputEventMouseButton and event.pressed:
 		var updated: bool = false
-		if character_selected == character: # unselect
-			if character_selected != null:
-				updated = true
-			character_selected = null
-			container.get_child(0).color = Color.ALICE_BLUE
-		else:
-			if character_selected != character:
-				updated = true
+		if character_selected != character:
+			updated = true
 			character_selected = character
 			container.get_child(0).color = Color.AQUAMARINE
 		if updated:
-			var updated_character := character_selected.resource_path if character_selected else ""
+			var updated_character := characters.find(character_selected)
 			print("Updating lobby with %s" % updated_character)
-			Steam.setLobbyMemberData(lobby_id, "character", updated_character)
+			Steam.setLobbyMemberData(lobby_id, "character", str(updated_character))
 			GlobalSteam.send_p2p_packet(0, {"type": GlobalSteam.GAME_PACKET_TYPE.LOBBY_CHARACTER_UPDATE, "character": updated_character })
 	
 func get_lobby_members() -> void:
@@ -198,7 +200,7 @@ func _on_lobby_chat_update(this_lobby_id: int, change_id: int, making_change_id:
 
 	# If a player has joined the lobby
 	if chat_state == Steam.CHAT_MEMBER_STATE_CHANGE_ENTERED:
-		createLobbyMember({"steam_id": change_id, "steam_name": changer_name, "character": ""})
+		createLobbyMember({"steam_id": change_id, "steam_name": changer_name, "character": 0})
 		print("%s has joined the lobby." % changer_name)
 
 	# Else if a player has left the lobby
@@ -270,5 +272,7 @@ func start_game() -> void:
 	var game_nodes = game_scene.instantiate()
 	var game: Game = game_nodes.get_node("Game")
 	game.lobby_id = lobby_id
+	game.main_menu_scene = main_menu_scene
+	game.player_characters = characters
 	get_tree().root.add_child(game_nodes)
 	self.queue_free()

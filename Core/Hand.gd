@@ -105,7 +105,6 @@ func update_drag():
 func end_drag(endPosition:Vector2) -> void:
 	#enum TargetType {SINGLE_ENEMY, SINGLE_ALLY, ALL_ENEMIES, ALL_ALLIES, ALL, SELF, RANDOM_ENEMY, RANDOM_ALLY, RANDOM_ALL}
 	var target_type_group := "enemies"
-	print(dragged_card.card_data.target_type)
 	match dragged_card.card_data.target_type:
 		BaseCard.TargetType.SINGLE_ENEMY:
 			target_type_group = "enemies"
@@ -121,6 +120,8 @@ func end_drag(endPosition:Vector2) -> void:
 		if target == null:
 			found_target = false
 			print("Null Target for ", dragged_card)
+	else:
+		found_target = dragged_card.area.overlaps_area(drop_area)
 	
 	if found_target:
 		card_played.emit(dragged_card, target)

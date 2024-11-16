@@ -10,7 +10,7 @@ signal remote_modal_confirm
 signal remote_enemy_decide(target_index: int)
 signal remote_host_shuffle(deck: Array)
 
-@export var player_characters: Array[PlayerClassData] = []
+var player_characters: Array[PlayerClassData] = []
 @export var player_scene: PackedScene  # Scene file for each player
 @export var enemy_scene: PackedScene  # Scene file for each enemy
 @export var enemy_count: int = 3  # Define the number of enemies
@@ -37,6 +37,8 @@ var is_host: bool = false
 
 var host_id: int
 var game_start_time: float
+
+var main_menu_scene
 
 func get_card_id() -> int:
 	card_count += 1
@@ -73,7 +75,8 @@ func setup_game():
 		var enemy = enemy_scene.instantiate() as Enemy
 		enemy.position = enemy_spawn.position
 		enemy.is_host = is_host
-
+		
+		enemy.setup(players.size()) # Adjust enemy for player count
 		enemies.append(enemy)
 		add_child(enemy)
 		enemy.add_to_group("enemies")
@@ -186,10 +189,11 @@ func generate_players_from_lobby():
 		var member_name = Steam.getFriendPersonaName(member_id)
 		var member_character = Steam.getLobbyMemberData(lobby_id, member_id, "character")
 		
+		var character: PlayerClassData = player_characters[int(member_character)]
 		var is_remote: bool = member_id != GlobalSteam.steam_id
 		var player = player_scene.instantiate() as Player
 		player.position = player_spawn.position + Vector2(480 * i, 0)
-		player.class_data = load(member_character) # TODO switch to enums...
+		player.class_data = character.duplicate()
 		player.is_remote = is_remote
 		player.setup_class()
 		players.append(player)
@@ -203,10 +207,17 @@ func generate_players_from_lobby():
 
 
 func end_game(victory: bool) -> void:
-	# TODO: Need to delay here???? Animation maybe???
+	Steam.leaveLobby(lobby_id)
+	# Close session with all users
+	for player in players:
+		# Make sure this isn't your Steam ID
+		if player['steam_id'] != GlobalSteam.steam_id:
+			# Close the P2P session
+			Steam.closeP2PSessionWithUser(player['steam_id'])
 	var end_game_s = end_game_scene.instantiate()
 	end_game_s.victory = victory
 	end_game_s.create_table(stats.player_data)
+	end_game_s.main_menu_scene = main_menu_scene
 	get_tree().root.add_child(end_game_s)
 	get_parent().queue_free()
 	

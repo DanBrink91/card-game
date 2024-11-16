@@ -5,7 +5,7 @@
 [ext_resource type="Theme" uid="uid://caqpf3csdd1sb" path="res://main_theme.tres" id="3_fmsjy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dgl4b"]
-size = Vector2(120, 175)
+size = Vector2(119.404, 175.94)
 
 [node name="CardNode" type="Control"]
 custom_minimum_size = Vector2(120, 175)
@@ -52,7 +52,7 @@ grow_horizontal = 2
 layout_mode = 2
 mouse_filter = 2
 theme_override_colors/default_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/normal_font_size = 24
+theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
 text = "Title"
 fit_content = true
@@ -72,7 +72,7 @@ scale = Vector2(1, 1.08)
 [node name="Description" type="RichTextLabel" parent="DescriptionContainer"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/normal_font_size = 10
 bbcode_enabled = true
 text = "This is a description"
 scroll_active = false
@@ -81,7 +81,7 @@ metadata/_edit_use_anchors_ = true
 [node name="Area2D" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(59.4026, 84.5163)
+position = Vector2(59.1038, 87.5)
 scale = Vector2(1.00325, 0.994658)
 shape = SubResource("RectangleShape2D_dgl4b")
 

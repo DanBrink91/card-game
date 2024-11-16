@@ -9,6 +9,8 @@ signal enemy_take_damage(amount: int, source: Player)
 
 
 @export var starting_health: int = 40
+@export var health_per_player: int = 30
+
 @export var starting_damage: int = 1
 
 @export var curse_card: BaseCard
@@ -36,7 +38,10 @@ func _ready() -> void:
 	damage = starting_damage
 	update_ui()
 	actions = [ENEMY_ACTION.LIGHT_STRIKE, ENEMY_ACTION.CURSE_SINGLE]
-	
+
+func setup(player_count: int) -> void:
+	health  = starting_health + (player_count - 1) * health_per_player
+
 func take_damage(amount: int, source: Player) -> void:
 	Util.spawn_floating_text("-" + str(amount), global_position, Vector2(0, -45))
 	enemy_take_damage.emit(amount, source)
