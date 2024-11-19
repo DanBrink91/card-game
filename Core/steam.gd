@@ -5,7 +5,7 @@ signal network_packet(sender, data)
 
 const PACKET_READ_LIMIT: int = 32
 
-var app_id:int = 480
+var app_id:int = 3359230
 
 var is_on_steam_deck: bool
 var is_online: bool

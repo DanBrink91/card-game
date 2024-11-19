@@ -29,6 +29,7 @@ func _ready() -> void:
 	Steam.getPlayerAvatar(Steam.AVATAR_LARGE, GlobalSteam.steam_id)
 	
 func _on_loaded_avatar(user_id: int, avatar_size: int, avatar_buff: PackedByteArray) -> void:
+	if user_id != GlobalSteam.steam_id: return # Don't update this, TODO: Party
 	print("Avata for user: %s" % user_id)
 	
 	var avatar_image: Image = Image.create_from_data(avatar_size, avatar_size, false, Image.FORMAT_RGBA8, avatar_buff)
@@ -51,7 +52,7 @@ func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 		Steam.setLobbyJoinable(lobby_id, true) # this should already be done but just in case..
 		
 		# Setup some lobby data
-		Steam.setLobbyData(lobby_id, "name", "Zieth Game Lobby")
+		Steam.setLobbyData(lobby_id, "name", "%s Lobby" % GlobalSteam.steam_username)
 		Steam.setLobbyData(lobby_id, "mode", "Single Boss")
 		
 		# Allow P2P connections to fallback through Steam if needed
@@ -62,7 +63,7 @@ func _on_open_lobby_list_pressed() -> void:
 	   # Set distance to worldwide
 	Steam.addRequestLobbyListDistanceFilter(Steam.LOBBY_DISTANCE_FILTER_WORLDWIDE)
 	# TODO: Remove this once we have our own app id
-	Steam.addRequestLobbyListStringFilter("name", "Zieth Game Lobby", Steam.LOBBY_COMPARISON_EQUAL)
+	# Steam.addRequestLobbyListStringFilter("name", "Zieth Game Lobby", Steam.LOBBY_COMPARISON_EQUAL)
 	print("Requesting a lobby list")
 	Steam.requestLobbyList()
 

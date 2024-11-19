@@ -10,13 +10,13 @@
 [ext_resource type="PackedScene" uid="uid://bt1dvrjuicxl2" path="res://Scenes/shop_card.tscn" id="8_hb0tr"]
 [ext_resource type="PackedScene" uid="uid://dpykmbcbe6fvi" path="res://Scenes/end_game.tscn" id="8_srsgc"]
 [ext_resource type="Script" path="res://Cards/BaseCard.gd" id="8_vnqge"]
-[ext_resource type="Resource" uid="uid://5v2dxbh1vw72" path="res://Cards/CopperCard.tres" id="9_lp4yw"]
-[ext_resource type="Resource" uid="uid://c5li2x1h26lbg" path="res://Cards/StrikeCard.tres" id="10_0xqow"]
+[ext_resource type="Resource" uid="uid://d3nkag8ne10gh" path="res://Cards/ShareWealthCard.tres" id="13_2rruc"]
 [ext_resource type="Resource" uid="uid://c3yghsyhxvens" path="res://Cards/SilverCard.tres" id="13_5hf6f"]
 [ext_resource type="Resource" uid="uid://4udb3s6wkgc8" path="res://Cards/HeavyStrikeCard.tres" id="14_fq4td"]
 [ext_resource type="Resource" uid="uid://c0axljudxfyag" path="res://Cards/GoldCard.tres" id="14_ymg17"]
 [ext_resource type="Resource" uid="uid://2np2ig0mjjki" path="res://Cards/SeekCard.tres" id="17_nwler"]
 [ext_resource type="Script" path="res://Core/stats.gd" id="17_qdt3d"]
+[ext_resource type="Resource" uid="uid://cee1ptw500tne" path="res://Cards/RallyStrikeCard.tres" id="18_b6gba"]
 [ext_resource type="Resource" uid="uid://bq15kuiy8clui" path="res://Cards/RecycleCard.tres" id="18_fuhid"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g5eoo"]
@@ -87,8 +87,8 @@ position = Vector2(407, -479)
 scale = Vector2(0.8, 0.8)
 script = ExtResource("7_g6k3b")
 ShopNodeScene = ExtResource("8_hb0tr")
-MoneyCards = Array[ExtResource("8_vnqge")]([ExtResource("9_lp4yw"), ExtResource("13_5hf6f"), ExtResource("14_ymg17")])
-SpellCards = Array[ExtResource("8_vnqge")]([ExtResource("10_0xqow"), ExtResource("14_fq4td"), ExtResource("18_fuhid"), ExtResource("17_nwler")])
+MoneyCards = Array[ExtResource("8_vnqge")]([ExtResource("13_5hf6f"), ExtResource("14_ymg17"), ExtResource("13_2rruc")])
+SpellCards = Array[ExtResource("8_vnqge")]([ExtResource("14_fq4td"), ExtResource("18_fuhid"), ExtResource("17_nwler"), ExtResource("18_b6gba")])
 cardRowCount = 4
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Game/Shop"]

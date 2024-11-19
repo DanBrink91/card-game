@@ -83,11 +83,6 @@ func _input(event):
 		update_drag()
 	elif event is InputEventMouseButton and not event.pressed and dragged_card:
 		end_drag(event.position)
-		
-#func _on_drop_area_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
-	#if event is InputEventMouseButton and event.is_released and dragged_card:
-		#emit_signal("card_dropped", dragged_card)
-		#dragged_card = null # clean up?
 
 func _on_card_clicked(card: CardNode) -> void:
 	# Based on Targetting Type of the Card do different things here...

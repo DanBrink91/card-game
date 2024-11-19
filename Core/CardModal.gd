@@ -80,7 +80,19 @@ func _on_card_click(card: CardNode) -> void:
 			GlobalSteam.send_p2p_packet(0, {"type": GlobalSteam.GAME_PACKET_TYPE.GAME_MODAL_UPDATE, "card_index": card_index})
 	else:
 		if cardsSelected >= cardsRequired: # We don't need to select anymore cards...
-			return
+			if cardsRequired == 1: 
+				# unselect current
+				var current_selected_index: int = selected.find(true)
+				selected[current_selected_index] = false
+				cardNodes[current_selected_index].modulate.a = inactiveCardOpacity
+				# select new one
+				selected[card_index] = true
+				cardsSelected += 1
+				card.modulate.a = 100
+				if not active_player.is_remote:
+					GlobalSteam.send_p2p_packet(0, {"type": GlobalSteam.GAME_PACKET_TYPE.GAME_MODAL_UPDATE, "card_index": card_index})
+			else: # ignore this for now
+				return
 		else:
 			selected[card_index] = true
 			cardsSelected += 1

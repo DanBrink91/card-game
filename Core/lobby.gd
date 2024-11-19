@@ -17,6 +17,7 @@ var main_menu_scene
 
 var is_ready: bool = false
 var character_selected: PlayerClassData
+var containers: Array = []
 
 var steamid_to_avatar: Dictionary = {}
 
@@ -60,7 +61,7 @@ func addCharacters() -> void:
 		color_rect.color = Color.ALICE_BLUE if index > 0 else Color.AQUAMARINE
 		color_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 		color_rect.mouse_filter =Control.MOUSE_FILTER_IGNORE
-		
+		containers.append(color_rect)
 		# Add all the containers and children
 		center.add_child(label)
 		color_rect.add_child(center)
@@ -177,6 +178,11 @@ func _on_character_click(event: InputEvent, container: Container, index: int):
 			updated = true
 			character_selected = character
 			container.get_child(0).color = Color.AQUAMARINE
+			var color_rect_index: int = 0
+			for color_rect in containers:
+				if color_rect_index != index:
+					color_rect.color = Color.ALICE_BLUE
+				color_rect_index += 1
 		if updated:
 			var updated_character := characters.find(character_selected)
 			print("Updating lobby with %s" % updated_character)

@@ -16,6 +16,8 @@ extends Node2D
 var shop_cards: Array[Shop_Card] = []
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	MoneyCards.sort_custom(func(a: BaseCard, b: BaseCard): return a.price < b.price)
+	SpellCards.sort_custom(func(a: BaseCard, b: BaseCard): return a.price < b.price)
 	placeShopCards()
 	game.remote_card_buy.connect(_handle_remote_card_buy)
 	

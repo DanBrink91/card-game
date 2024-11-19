@@ -9,6 +9,6 @@ value = 2
 name = "Silver"
 description = "Gain %d Money"
 cost = 0
-price = 2
+price = 3
 texture = ExtResource("2_unamy")
 target_type = 5

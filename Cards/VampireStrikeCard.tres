@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="VampireStrikeCard" load_steps=4 format=3 uid="uid://dv525fic1orun"]
+
+[ext_resource type="Resource" uid="uid://5v2dxbh1vw72" path="res://Cards/CopperCard.tres" id="1_8rwuu"]
+[ext_resource type="Script" path="res://Cards/VampireStrikeCard.gd" id="1_e7aul"]
+[ext_resource type="Texture2D" uid="uid://fvts637yplm4" path="res://Art/Cards/tilted_cross.png" id="3_ieyj5"]
+
+[resource]
+script = ExtResource("1_e7aul")
+damage = 3
+blood_card = ExtResource("1_8rwuu")
+name = "Rupture"
+description = "Deal %d damage and add a blood card to discard"
+cost = 1
+price = 2
+texture = ExtResource("3_ieyj5")
+target_type = 0

@@ -3,7 +3,6 @@ extends Node2D
 
 signal turn_ended
 signal enemy_death
-signal all_player_death
 signal enemy_take_damage(amount: int, source: Player)
 
 
@@ -75,9 +74,6 @@ func start_turn() -> void:
 		ENEMY_ACTION.HEAVY_STRIKE_ALL:
 			pass	
 	
-	var alive_players := get_tree().get_nodes_in_group("allies").filter(func(player): return player.life > 0)
-	if alive_players.size() == 0:
-		all_player_death.emit()
 	end_turn()
 
 func single_target_damage(damage: int) -> void:

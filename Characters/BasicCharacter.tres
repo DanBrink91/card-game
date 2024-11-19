@@ -8,7 +8,7 @@
 [resource]
 script = ExtResource("1_iw4pe")
 name = "Basic"
-starting_health = 10
+starting_health = 15
 starting_mana = 3
 starting_hand_size = 5
 starting_cards = Array[ExtResource("2_bpfir")]([ExtResource("2_jlio8"), ExtResource("2_jlio8"), ExtResource("2_jlio8"), ExtResource("4_nlq68"), ExtResource("4_nlq68"), ExtResource("4_nlq68"), ExtResource("4_nlq68"), ExtResource("4_nlq68"), ExtResource("2_jlio8"), ExtResource("2_jlio8")])

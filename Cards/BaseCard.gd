@@ -6,7 +6,7 @@ signal stats_updated # Signal for when any stat is updated
 enum TargetType {SINGLE_ENEMY, SINGLE_ALLY, ALL_ENEMIES, ALL_ALLIES, ALL, SELF, RANDOM_ENEMY, RANDOM_ALLY, RANDOM_ALL}
 
 @export var name: String
-@export var description: String
+@export_multiline var description: String
 @export var cost: int = 0
 @export var price: int = 0
 @export var texture: Texture
@@ -15,6 +15,7 @@ enum TargetType {SINGLE_ENEMY, SINGLE_ALLY, ALL_ENEMIES, ALL_ALLIES, ALL, SELF, 
 var id :int = -1
 var modifiers = []
 
+var owner: Player
 # Example function to update modifiers and emit signal
 func add_modifier(modifier):
 	modifiers.append(modifier)

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PlayerClassData" load_steps=7 format=3 uid="uid://bo74tpijvohy2"]
+
+[ext_resource type="Script" path="res://Characters/PlayerClassData.gd" id="1_3c0lf"]
+[ext_resource type="Script" path="res://Cards/BaseCard.gd" id="2_f5jus"]
+[ext_resource type="Resource" uid="uid://dv525fic1orun" path="res://Cards/VampireStrikeCard.tres" id="3_pn5aa"]
+[ext_resource type="Resource" uid="uid://5v2dxbh1vw72" path="res://Cards/CopperCard.tres" id="4_s7p2x"]
+[ext_resource type="Resource" uid="uid://c5li2x1h26lbg" path="res://Cards/StrikeCard.tres" id="5_vuyk4"]
+[ext_resource type="Resource" uid="uid://5s18k47qmsp8" path="res://Cards/VampireFeastCard.tres" id="6_o1srg"]
+
+[resource]
+script = ExtResource("1_3c0lf")
+name = "Vampire"
+starting_health = 15
+starting_mana = 2
+starting_hand_size = 5
+starting_cards = Array[ExtResource("2_f5jus")]([ExtResource("3_pn5aa"), ExtResource("4_s7p2x"), ExtResource("4_s7p2x"), ExtResource("4_s7p2x"), ExtResource("5_vuyk4"), ExtResource("6_o1srg"), ExtResource("4_s7p2x"), ExtResource("4_s7p2x"), ExtResource("5_vuyk4"), ExtResource("5_vuyk4")])

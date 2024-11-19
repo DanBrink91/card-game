@@ -5,6 +5,7 @@ signal turn_ended
 signal card_bought(card: BaseCard)
 signal card_played(card: BaseCard)
 signal damage_taken(amount: int)
+signal player_died
 
 # Starting Data for our Class
 @export var class_data: PlayerClassData
@@ -39,6 +40,7 @@ var is_host: bool = false
 
 var saved_order: Array # Save the order for deck shuffling when host
 
+var is_alive: bool = true
 func _ready() -> void:
 	HealthLabel = PlayerUI.get_node_or_null('HealthLabel')
 	ManaLabel = PlayerUI.get_node_or_null('ManaLabel')
@@ -58,7 +60,7 @@ func setup_class():
 	
 	base_mana = class_data.starting_mana
 	mana = base_mana
-	
+	update_ui()
 	var card_counter:int = 0
 	for card in class_data.starting_cards:
 		# Duplicate the BaseCard so each CardNode has a unique one
@@ -74,6 +76,7 @@ func setup_class():
 func add_card(card: BaseCard, to: CARD_LOCATIONS) -> void:
 	var dup_card: BaseCard = card.duplicate()
 	dup_card.id = game.get_card_id()
+	dup_card.owner = self
 	match to:
 		CARD_LOCATIONS.DECK:
 			deck.append(dup_card)
@@ -90,9 +93,6 @@ func add_to_hand(card: BaseCard) -> void:
 	hand.append(card)
 
 func start_turn() -> void:
-	mana = base_mana
-	money = 0
-	update_ui()
 	if not is_remote:
 		handNode.start_turn()
 
@@ -106,6 +106,10 @@ func end_turn() -> void:
 	for card in drawnCards:
 		add_to_hand(card)
 	turn_ended.emit()
+	mana = base_mana
+	money = 0
+	update_ui()
+
 
 # Discard ALL cards from hand
 func discard_hand() -> void:
@@ -213,8 +217,14 @@ func take_damage(amount:int) -> void:
 	damage_taken.emit(amount)
 	print("Player taking %s damage" % amount)
 	life -= amount
-	if life <= 0:
+	if life <= 0 and is_alive:
+		is_alive = false
+		player_died.emit()
 		print("Player died...")
+		# Death Penalties, TODO: Buff / Debuff replace this
+		hand_size = max(hand_size - 2, 3)
+		base_mana = max(base_mana - 1, 1)
+		
 	update_ui()
 
 func buy_card(card: BaseCard) -> void:

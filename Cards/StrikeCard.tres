@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("1_wianw")
-damage = 2
+damage = 1
 name = "Strike"
 description = "Deals %d Damage"
 cost = 1

@@ -81,9 +81,7 @@ func setup_game():
 		add_child(enemy)
 		enemy.add_to_group("enemies")
 		stats.add_enemy_entry(enemy)
-		
-		enemy.all_player_death.connect(end_game.bind(false))
-		enemy.enemy_death.connect(end_game.bind(true))
+		enemy.enemy_death.connect(check_end_game)
 
 func connect_signals():
 	#for player in players:
@@ -202,11 +200,28 @@ func generate_players_from_lobby():
 		player.player_name = member_name
 		player.is_host = is_host
 		player.steam_id = member_id
+		player.player_died.connect(check_end_game)
 		steamid_to_player[member_id] = player
 		stats.add_player_entry(player)
 
+# Currently only kills / deaths are win/lose condition
+func check_end_game() -> void:
+	var alive_players = get_tree().get_nodes_in_group("allies").filter(func (player): return player.life > 0)
+	if alive_players.size() == 0:
+		end_game(false)
+	var alive_enemies = get_tree().get_nodes_in_group("enemies").filter(func (enemy): return enemy.health > 0)
+	if alive_enemies.size() == 0:
+		end_game(true)
+	
+func end_game(victory: bool) -> void:	
+	var end_game_s = end_game_scene.instantiate()
+	end_game_s.victory = victory
+	end_game_s.create_table(stats.player_data)
+	end_game_s.main_menu_scene = main_menu_scene
+	await get_tree().create_timer(0.75).timeout
 
-func end_game(victory: bool) -> void:
+	get_tree().root.add_child(end_game_s)	
+	# Need to delay this... or something
 	Steam.leaveLobby(lobby_id)
 	# Close session with all users
 	for player in players:
@@ -214,11 +229,6 @@ func end_game(victory: bool) -> void:
 		if player['steam_id'] != GlobalSteam.steam_id:
 			# Close the P2P session
 			Steam.closeP2PSessionWithUser(player['steam_id'])
-	var end_game_s = end_game_scene.instantiate()
-	end_game_s.victory = victory
-	end_game_s.create_table(stats.player_data)
-	end_game_s.main_menu_scene = main_menu_scene
-	get_tree().root.add_child(end_game_s)
 	get_parent().queue_free()
 	
 # This should only be called on the host

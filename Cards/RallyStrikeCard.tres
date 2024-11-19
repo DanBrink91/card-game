@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="RallyStrikeCard" load_steps=3 format=3 uid="uid://cee1ptw500tne"]
+
+[ext_resource type="Script" path="res://Cards/RallyStrike.gd" id="1_jsita"]
+[ext_resource type="Texture2D" uid="uid://b8rps4m8r6dua" path="res://Art/Cards/TODO.png" id="2_r3qol"]
+
+[resource]
+script = ExtResource("1_jsita")
+damage = 5
+cards_to_draw = 1
+name = "Rally Strike"
+description = "Deal %d damage  then every player draws a card"
+cost = 3
+price = 7
+texture = ExtResource("2_r3qol")
+target_type = 0
