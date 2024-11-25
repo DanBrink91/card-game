@@ -48,7 +48,6 @@ func add_card(card: CardNode) -> void:
 func remove_card(card: BaseCard) -> void:
 	# Find matching CardNode for BaseCard(card_data)
 	var filtered_cards := cards.filter(func (card_node:CardNode):  return card_node.card_data.id == card.id)
-	print("Filtered Cards Size: %s" % filtered_cards.size())
 	var selected_card :CardNode = filtered_cards[0]
 	cards.erase(selected_card)
 	selected_card.queue_free()
@@ -131,8 +130,12 @@ func reset_drag():
 	drag_offset = Vector2.ZERO
 
 # Find clicked on target in either enemies or allies group
-func find_target(group: String) -> Node2D:
-	for target in get_tree().get_nodes_in_group(group):
+func find_target(groupStr: String) -> Node2D:
+	var group = get_tree().get_nodes_in_group(groupStr)
+	# If there's only one valid target just return it
+	if group.size() == 1 and dragged_card.area.overlaps_area(drop_area): 
+		return group[0]
+	for target in group:
 		var target_area := target.get_node('Area2D')
 		if target_area and dragged_card.area.overlaps_area(target_area):
 			return target

@@ -93,7 +93,9 @@ func add_to_hand(card: BaseCard) -> void:
 	hand.append(card)
 
 func start_turn() -> void:
+	print("player start turn")
 	if not is_remote:
+		print("starting hand")
 		handNode.start_turn()
 
 func end_turn() -> void:

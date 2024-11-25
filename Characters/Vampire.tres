@@ -10,6 +10,7 @@
 [resource]
 script = ExtResource("1_3c0lf")
 name = "Vampire"
+description = "The Vampire feasts on cards for boosts of power"
 starting_health = 15
 starting_mana = 2
 starting_hand_size = 5

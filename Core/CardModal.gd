@@ -10,8 +10,10 @@ signal modal_finished(finished: bool, cards: Array[BaseCard])
 var cardOptions: Array[BaseCard]
 var cardNodes: Array[CardNode] = []
 var selected: Array[bool]
+
 var cardsRequired: int = 0
 var cardsSelected: int = 0
+var maxCards: int = 0
 
 @export var card_scene: PackedScene
 @export var inactiveCardOpacity: float = 0.5
@@ -33,7 +35,7 @@ var game: Game = null :
 func _ready() -> void:
 	button.pressed.connect(_on_button_press)
 
-func show_modal(text:String, cards: Array[BaseCard], numCardsRequired: int):
+func show_modal(text:String, cards: Array[BaseCard], numCardsRequired: int = 1, maxCardsRequired: int = 1):
 	# Reset everything
 	cardOptions.clear()
 	cardNodes.clear()
@@ -45,7 +47,7 @@ func show_modal(text:String, cards: Array[BaseCard], numCardsRequired: int):
 	label.text = text
 	cardOptions = cards
 	cardsRequired = numCardsRequired
-	
+	maxCards = maxCardsRequired
 	for card in cardOptions:
 		var card_node = card_scene.instantiate() as CardNode
 		card_node.set_card_data(card)
@@ -79,8 +81,8 @@ func _on_card_click(card: CardNode) -> void:
 		if not active_player.is_remote:
 			GlobalSteam.send_p2p_packet(0, {"type": GlobalSteam.GAME_PACKET_TYPE.GAME_MODAL_UPDATE, "card_index": card_index})
 	else:
-		if cardsSelected >= cardsRequired: # We don't need to select anymore cards...
-			if cardsRequired == 1: 
+		if cardsSelected >= maxCards: # We don't need to select anymore cards...
+			if maxCards == 1: 
 				# unselect current
 				var current_selected_index: int = selected.find(true)
 				selected[current_selected_index] = false

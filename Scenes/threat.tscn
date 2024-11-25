@@ -1,0 +1,76 @@
+[gd_scene load_steps=2 format=3 uid="uid://dkhhfi60p5wog"]
+
+[ext_resource type="Script" path="res://Core/Threat.gd" id="1_2bav2"]
+
+[node name="Control" type="Control"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1720.0
+offset_bottom = -880.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2bav2")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+color = Color(1, 0.48106, 0.381803, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(180, 150)
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_right = 5
+
+[node name="DescriptionLabel" type="RichTextLabel" parent="MarginContainer/VBoxContainer/MarginContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 18
+bbcode_enabled = true
+text = "Pay 3 mana or each player takes 4 damage
+
+"
+fit_content = true
+scroll_active = false
+
+[node name="MarginContainer3" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(180, 50)
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_right = 5
+
+[node name="TurnsLabel" type="RichTextLabel" parent="MarginContainer/VBoxContainer/MarginContainer3"]
+layout_mode = 2
+mouse_filter = 2
+bbcode_enabled = true
+text = "[b]2[/b] Turns Left
+"
+fit_content = true
+scroll_active = false

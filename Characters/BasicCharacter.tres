@@ -8,6 +8,7 @@
 [resource]
 script = ExtResource("1_iw4pe")
 name = "Basic"
+description = "Basic is just a chill guy"
 starting_health = 15
 starting_mana = 3
 starting_hand_size = 5

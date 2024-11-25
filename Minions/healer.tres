@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="heal_enemies" load_steps=3 format=3 uid="uid://dek0olveucy6l"]
+
+[ext_resource type="Script" path="res://Minions/heal_enemies.gd" id="1_k6h2h"]
+[ext_resource type="Texture2D" uid="uid://dfbv5kfn0dyuf" path="res://Art/Minions/TODO_MINION.png" id="2_eja5d"]
+
+[resource]
+script = ExtResource("1_k6h2h")
+heal = 2
+health = 8
+description = "Gives main enemy %d health"
+texture = ExtResource("2_eja5d")

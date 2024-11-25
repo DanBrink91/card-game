@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PlayerClassData" load_steps=6 format=3 uid="uid://biwlpswdwnr4n"]
+
+[ext_resource type="Script" path="res://Characters/PlayerClassData.gd" id="1_qkjnr"]
+[ext_resource type="Script" path="res://Cards/BaseCard.gd" id="2_xaoa3"]
+[ext_resource type="Resource" uid="uid://c5li2x1h26lbg" path="res://Cards/StrikeCard.tres" id="3_lffjt"]
+[ext_resource type="Resource" uid="uid://5v2dxbh1vw72" path="res://Cards/CopperCard.tres" id="4_hmdcs"]
+[ext_resource type="Resource" uid="uid://pekjgj1jurr3" path="res://Cards/KatanaCard.tres" id="5_xkwg2"]
+
+[resource]
+script = ExtResource("1_qkjnr")
+name = "Samurai"
+description = "The Samurai's attacks get better as he uses them"
+starting_health = 15
+starting_mana = 3
+starting_hand_size = 5
+starting_cards = Array[ExtResource("2_xaoa3")]([ExtResource("3_lffjt"), ExtResource("3_lffjt"), ExtResource("4_hmdcs"), ExtResource("4_hmdcs"), ExtResource("4_hmdcs"), ExtResource("5_xkwg2"), ExtResource("3_lffjt"), ExtResource("4_hmdcs"), ExtResource("4_hmdcs"), ExtResource("4_hmdcs")])

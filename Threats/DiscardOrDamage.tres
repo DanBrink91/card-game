@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="DiscardOrDamage" load_steps=3 format=3 uid="uid://c2qq8yuv1b88u"]
+
+[ext_resource type="Script" path="res://Threats/DiscardOrDamage.gd" id="1_csk63"]
+[ext_resource type="PackedScene" uid="uid://bparwac5tbwpq" path="res://Scenes/card_modal.tscn" id="1_cypr6"]
+
+[resource]
+script = ExtResource("1_csk63")
+cards_to_discard = 3
+damage_to_take = 6
+card_modal_scene = ExtResource("1_cypr6")
+description = "Discard %d cards or take %d damage"
+turn_limit = 3

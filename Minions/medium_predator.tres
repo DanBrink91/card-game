@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="hit_lowest" load_steps=3 format=3 uid="uid://bd6uf85mo4f42"]
+
+[ext_resource type="Script" path="res://Minions/hit_lowest.gd" id="1_4321r"]
+[ext_resource type="Texture2D" uid="uid://b8rps4m8r6dua" path="res://Art/Cards/TODO.png" id="2_qhspu"]
+
+[resource]
+script = ExtResource("1_4321r")
+damage = 3
+health = 10
+description = "Deals %d damage to lowest HP player"
+texture = ExtResource("2_qhspu")

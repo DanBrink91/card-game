@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="katana" load_steps=3 format=3 uid="uid://pekjgj1jurr3"]
+
+[ext_resource type="Script" path="res://Cards/katana.gd" id="1_kwag4"]
+[ext_resource type="Texture2D" uid="uid://bimty8yliwlap" path="res://Art/Cards/katana.png" id="2_2tpfa"]
+
+[resource]
+script = ExtResource("1_kwag4")
+damage = 1
+upgrade = 1
+name = "Katana"
+description = "Deals %d damage, then increases damage by %d"
+cost = 2
+price = 5
+texture = ExtResource("2_2tpfa")
+target_type = 0

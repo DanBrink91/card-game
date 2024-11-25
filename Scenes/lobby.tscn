@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://jd3vdhm1oatp"]
+[gd_scene load_steps=7 format=3 uid="uid://jd3vdhm1oatp"]
 
 [ext_resource type="Script" path="res://Core/lobby.gd" id="1_fnhhr"]
 [ext_resource type="Script" path="res://Characters/PlayerClassData.gd" id="2_hluwx"]
 [ext_resource type="Resource" uid="uid://dsgvvakdja2x6" path="res://Characters/BasicCharacter.tres" id="3_il27t"]
 [ext_resource type="Resource" uid="uid://bo74tpijvohy2" path="res://Characters/Vampire.tres" id="4_761je"]
 [ext_resource type="PackedScene" uid="uid://bcfe3r5hwbt11" path="res://Scenes/battle_scene.tscn" id="4_wjax1"]
+[ext_resource type="Resource" uid="uid://biwlpswdwnr4n" path="res://Characters/Samurai.tres" id="5_ixfif"]
 
 [node name="Lobby" type="Control"]
 layout_mode = 3
@@ -14,7 +15,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_fnhhr")
-characters = Array[ExtResource("2_hluwx")]([ExtResource("3_il27t"), ExtResource("4_761je")])
+characters = Array[ExtResource("2_hluwx")]([ExtResource("3_il27t"), ExtResource("4_761je"), ExtResource("5_ixfif")])
 game_scene = ExtResource("4_wjax1")
 
 [node name="PlayerContainer" type="VBoxContainer" parent="."]
@@ -56,3 +57,17 @@ offset_top = 795.0
 offset_right = 1869.0
 offset_bottom = 865.0
 text = "Start Game"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(600, 300)
+layout_mode = 0
+offset_left = 588.0
+offset_top = 114.0
+offset_right = 1188.0
+offset_bottom = 314.0
+
+[node name="ClassLabel" type="RichTextLabel" parent="MarginContainer"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+text = "The Samurai excels at stuff"

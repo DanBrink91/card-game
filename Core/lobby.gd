@@ -8,6 +8,7 @@ extends Control
 @onready var CharacterContainer: Container = $ScrollContainer/CharacterContainer
 @onready var ExitButton: Button = $ExitButton
 @onready var StartGameButton: Button = $StartGameButton
+@onready var ClassLabel: RichTextLabel = $MarginContainer/ClassLabel
 
 var lobby_id: int = 0
 var steam_id: int = -1
@@ -36,6 +37,7 @@ func _ready() -> void:
 	#Steam.lobby_message.connect(_on_lobby_message)
 	GlobalSteam.network_packet.connect(_handle_network_packet)
 	character_selected = characters[0]
+	ClassLabel.text = characters[0].description
 
 func addCharacters() -> void:
 	var index := 0
@@ -164,10 +166,12 @@ func _on_loaded_avatar(user_id: int, avatar_size: int, avatar_buff: PackedByteAr
 	
 func _on_character_hover(container: Container, index: int) -> void:
 	var character: PlayerClassData = characters[index]
+	ClassLabel.text = character.description
 	print("Hovering over class: %s" % character.name)
 
 func _on_character_hover_exit(container: Container, index: int) -> void:
 	var character: PlayerClassData = characters[index]
+	ClassLabel.text = character_selected.description
 	print("No longer hovering over class: %s" % character.name)
 
 func _on_character_click(event: InputEvent, container: Container, index: int):
@@ -177,6 +181,7 @@ func _on_character_click(event: InputEvent, container: Container, index: int):
 		if character_selected != character:
 			updated = true
 			character_selected = character
+			ClassLabel.text = character_selected.description
 			container.get_child(0).color = Color.AQUAMARINE
 			var color_rect_index: int = 0
 			for color_rect in containers:
@@ -208,6 +213,8 @@ func _on_lobby_chat_update(this_lobby_id: int, change_id: int, making_change_id:
 	if chat_state == Steam.CHAT_MEMBER_STATE_CHANGE_ENTERED:
 		createLobbyMember({"steam_id": change_id, "steam_name": changer_name, "character": 0})
 		print("%s has joined the lobby." % changer_name)
+		Steam.getPlayerAvatar(Steam.AVATAR_LARGE, change_id)
+
 
 	# Else if a player has left the lobby
 	elif chat_state == Steam.CHAT_MEMBER_STATE_CHANGE_LEFT:

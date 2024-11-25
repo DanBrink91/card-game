@@ -179,6 +179,10 @@ func _handle_network_data(sender, data):
 				var order: Array = data.order
 				deck_owner.saved_order = order
 				remote_host_shuffle.emit(order)
+			GlobalSteam.GAME_PACKET_TYPE.GAME_ENEMY_THREAT_PAID:
+				# Assume the enemy with all the threats is 0 index
+				if enemies.size() > 0:
+					enemies[0].on_remote_threat_paid(player, data.threat_index)
 
 func generate_players_from_lobby():
 	var lobby_num_members: int = Steam.getNumLobbyMembers(lobby_id)

@@ -1,9 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://xgi66exqcx7a"]
+[gd_scene load_steps=11 format=3 uid="uid://xgi66exqcx7a"]
 
 [ext_resource type="Script" path="res://Core/Enemy.gd" id="1_3wh3o"]
+[ext_resource type="PackedScene" uid="uid://dkhhfi60p5wog" path="res://Scenes/threat.tscn" id="2_4phkk"]
 [ext_resource type="Resource" uid="uid://csst3h8ybe8b" path="res://Cards/BurnCurse.tres" id="2_6wem3"]
 [ext_resource type="Texture2D" uid="uid://dbs1s43th45rq" path="res://Art/Enemies/FB001.png" id="2_fxfl2"]
 [ext_resource type="Texture2D" uid="uid://d246rcldxp8nq" path="res://Art/Enemies/FlameDemon.png" id="2_odfiw"]
+[ext_resource type="Resource" uid="uid://c2qq8yuv1b88u" path="res://Threats/DiscardOrDamage.tres" id="3_28obp"]
+[ext_resource type="PackedScene" uid="uid://tbjbssxuhwu5" path="res://Scenes/minion.tscn" id="3_xuq4t"]
+[ext_resource type="Script" path="res://Minions/BaseMinion.gd" id="7_b6wj0"]
+[ext_resource type="Resource" uid="uid://sxq1881hp8ye" path="res://Minions/small_predator.tres" id="8_1unwb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o00eu"]
 size = Vector2(20, 21.6493)
@@ -11,8 +16,12 @@ size = Vector2(20, 21.6493)
 [node name="Enemy" type="Node2D"]
 scale = Vector2(1, 0.995)
 script = ExtResource("1_3wh3o")
+threat_scene = ExtResource("2_4phkk")
+minion_scene = ExtResource("3_xuq4t")
+discard_threat = ExtResource("3_28obp")
 curse_card = ExtResource("2_6wem3")
 attack_projectile = ExtResource("2_fxfl2")
+first_minions = Array[ExtResource("7_b6wj0")]([ExtResource("8_1unwb")])
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(3, 2.98605)
@@ -34,3 +43,18 @@ text = "40
 position = Vector2(0, 6.75879)
 scale = Vector2(9.87571, 8.19598)
 shape = SubResource("RectangleShape2D_o00eu")
+
+[node name="ThreatContainer" type="HBoxContainer" parent="."]
+offset_left = 139.0
+offset_top = -98.4925
+offset_right = 747.0
+offset_bottom = 101.508
+
+[node name="MinionContainer" type="GridContainer" parent="."]
+offset_left = -300.0
+offset_top = 150.0
+offset_right = 300.0
+offset_bottom = 900.0
+pivot_offset = Vector2(300, 375)
+mouse_filter = 2
+columns = 3
