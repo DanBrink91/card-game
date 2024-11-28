@@ -40,9 +40,10 @@ func player_card_bought(card: BaseCard, player: Player) -> void:
 	# TODO Save purchase history per player here
 
 func player_damage_taken(amount: int, player: Player) -> void:
-	player_data[player.player_name]["max_damage_taken"] = max(player_data[player.player_name]["max_damage_taken"], amount)
-	player_data[player.player_name]["damage_taken"] += amount
-	player_data[player.player_name]["times_damage_taken"] += 1
+	if player:
+		player_data[player.player_name]["max_damage_taken"] = max(player_data[player.player_name]["max_damage_taken"], amount)
+		player_data[player.player_name]["damage_taken"] += amount
+		player_data[player.player_name]["times_damage_taken"] += 1
 	
 
 
@@ -52,5 +53,6 @@ func player_card_played(card: BaseCard, player: Player) -> void:
 	# TODO Save play history here per player
 
 func player_deal_damage(amount: int, player: Player) -> void:
-	player_data[player.player_name]["damage_done"] += amount
-	player_data[player.player_name]["max_damage_done"] = max(player_data[player.player_name]["max_damage_done"], amount)
+	if player:
+		player_data[player.player_name]["damage_done"] += amount
+		player_data[player.player_name]["max_damage_done"] = max(player_data[player.player_name]["max_damage_done"], amount)

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="PosionEffect" load_steps=3 format=3 uid="uid://2ercynld00ny"]
+
+[ext_resource type="Texture2D" uid="uid://b12jslsif1w8w" path="res://Art/Buffs/posion.png" id="1_felc0"]
+[ext_resource type="Script" path="res://Buffs/PosionEffect.gd" id="1_y24bf"]
+
+[resource]
+script = ExtResource("1_y24bf")
+name = "Posion"
+description = "Deals damage at the end of the turn"
+icon = ExtResource("1_felc0")

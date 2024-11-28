@@ -20,7 +20,6 @@ func _ready() -> void:
 	gui_input.connect(_handle_input)
 
 func update_ui() -> void:
-	await ready
 	if threat:
 		description_label.text = threat.get_description()
 		turns_label.text = "Turns Left: %d" % turns_left
@@ -28,6 +27,7 @@ func update_ui() -> void:
 func set_threat(thrt: BaseThreat) -> void:
 	threat = thrt.duplicate()
 	turns_left = threat.turn_limit
+	await ready
 	update_ui()
 
 func progress_threat() -> void:
@@ -38,6 +38,11 @@ func progress_threat() -> void:
 		self.queue_free()
 	else:
 		update_ui()
+
+func complete(game: Game) -> void:
+	await threat.complete(game)
+	# TODO: Didn't pay off animation
+	self.queue_free()
 
 func _handle_input(event: InputEvent) -> void:
 	# Handle left click

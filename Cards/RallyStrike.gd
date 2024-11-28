@@ -11,7 +11,9 @@ func get_description() -> String:
 func play(player: Player, target) -> void:
 	print("Rally Strike Card Played")
 	if target and target.has_method("take_damage"):
-		target.take_damage(damage, player)
+		var calculated_damage: int = damage
+		calculated_damage = player.deal_damage(target, calculated_damage)
+		target.take_damage(calculated_damage, player)
 	
 	for playerIter in player.game.players:
 		var drawnCards = await playerIter.draw(cards_to_draw)

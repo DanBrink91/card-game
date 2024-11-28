@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ThrowingCards" load_steps=3 format=3 uid="uid://y6safe48tdqy"]
+
+[ext_resource type="Script" path="res://Cards/ThrowingCards.gd" id="1_xbrln"]
+[ext_resource type="Texture2D" uid="uid://biapu6lc71uvn" path="res://Art/Cards/throwing_cards.png" id="2_iye8g"]
+
+[resource]
+script = ExtResource("1_xbrln")
+damage = 2
+name = "Throwing Cards"
+description = "Discard your hand. Deal %d damage per card"
+cost = 3
+price = 6
+texture = ExtResource("2_iye8g")
+target_type = 0

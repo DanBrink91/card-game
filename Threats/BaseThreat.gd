@@ -18,3 +18,6 @@ func is_paid() -> bool:
 # If its not paid off in time and triggers
 func complete(game: Game) -> void:
 	pass
+
+func set_player_count(count: int) -> void:
+	pass

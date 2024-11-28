@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="MarkEffect" load_steps=3 format=3 uid="uid://civndhg3vrynj"]
+
+[ext_resource type="Script" path="res://Buffs/MarkEffect.gd" id="1_7l1r6"]
+[ext_resource type="Texture2D" uid="uid://cb7oytokfibhg" path="res://Art/Buffs/mark.png" id="1_wfryq"]
+
+[resource]
+script = ExtResource("1_7l1r6")
+bonus_damage = 1
+name = "Marked"
+description = "Will take extra damage when hurt"
+icon = ExtResource("1_wfryq")

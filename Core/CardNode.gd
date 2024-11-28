@@ -16,7 +16,9 @@ var card_data: BaseCard = null  # Reference to the base card resource
 @onready var sprite: Sprite2D = $Sprite
 @onready var area: Area2D = $Area2D
 @onready var collision_shape: CollisionShape2D = $Area2D/CollisionShape2D
+@onready var tooltip_container: VBoxContainer = $TooltipContainer
 
+@export var tooltip_scene: PackedScene
 
 var old_position: Vector2
 var old_scale: Vector2
@@ -26,19 +28,37 @@ var in_preview_mode: bool = false
 func _ready():
 	#area.input_event.connect()
 	gui_input.connect(_on_gui_input_event)
+	mouse_entered.connect(_on_mouse_enter)
+	mouse_exited.connect(_on_mouse_exit)
 	if card_data:
 		card_data.stats_updated.connect(self.refresh_display)
 	# Initialize the display when the node is ready
 	refresh_display()
 	old_position = global_position
 	old_scale = scale
+	tooltip_container.visible = false
 
 func set_card_data(new_card_data: BaseCard):
 	card_data = new_card_data
 	await self.ready # Make sure the children nodes are ready before we update them
 	refresh_display()
+	generate_tooltips()
 
-
+func generate_tooltips() -> void:
+	print("Tooltip generatin'")
+	# Clear tooltip_container
+	for n in tooltip_container.get_children():
+		tooltip_container.remove_child(n)
+		n.queue_free()
+	
+	tooltip_container.visible = false
+	for tooltip_text:String in card_data.get_tooltips():
+		print("Tooltip text: %s" % tooltip_text)
+		var tooltip = tooltip_scene.instantiate()
+		tooltip.get_node("PanelContainer/RichTextLabel").text = tooltip_text
+		tooltip_container.add_child(tooltip)
+	
+	
 # TODO Change old_position or disable this for certain modes like card modal
 func _on_gui_input_event(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.double_click:
@@ -65,6 +85,12 @@ func _on_gui_input_event(event: InputEvent) -> void:
 			global_position = old_position
 			scale = old_scale
 			in_preview_mode = false
+
+func _on_mouse_enter() -> void:
+	tooltip_container.visible = true
+
+func _on_mouse_exit() -> void:
+	tooltip_container.visible = false
 
 func refresh_display():
 	# Update display based on card_data values

@@ -279,7 +279,7 @@ func leave_lobby() -> void:
 		main_menu_scene.lobby_id = 0
 		main_menu_scene._on_lobby_match_list([])
 		self.queue_free()
-		
+
 func start_game() -> void:
 	GlobalSteam.send_p2p_packet(0, {"type": GlobalSteam.GAME_PACKET_TYPE.LOBBY_START})
 	var game_nodes = game_scene.instantiate()

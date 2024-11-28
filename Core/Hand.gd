@@ -33,7 +33,7 @@ func end_turn() -> void:
 func add_card(card: CardNode) -> void:
 	 # WTF???? FIXME: these get passed in as Area2D and we must make them CardNode..
 	var card_instance = card_scene.instantiate() as CardNode
-	card_instance.card_data = card.card_data
+	card_instance.set_card_data(card.card_data) 
 	card = card_instance
 	
 	card.position = Vector2(cards.size() * card.size.x / 2,  -card.size.y / 2)
@@ -62,6 +62,8 @@ func reorder_cards() -> void:
 func _on_card_hovered(card: CardNode) -> void:
 	if dragged_card != null or card.in_preview_mode: return # If we're dragging we don't care about hover
 	var hovered_card_index = cards.find(card)
+	print("Hovered Card Z index: %d" % card.z_index)
+	card.z_index = RenderingServer.CANVAS_ITEM_Z_MAX
 	for i in range(cards.size()):
 		if i == hovered_card_index: continue
 		var diff = i - hovered_card_index
@@ -74,6 +76,7 @@ func _on_card_hovered(card: CardNode) -> void:
 	
 func _on_card_unhovered(unhovered_card: CardNode) -> void:
 	if dragged_card or unhovered_card.in_preview_mode: return
+	unhovered_card.z_index = 0
 	reorder_cards()
 
 func _input(event):

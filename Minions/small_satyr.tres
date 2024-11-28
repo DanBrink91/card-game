@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="mana_steal" load_steps=3 format=3 uid="uid://bbl78v2ae3kkd"]
+
+[ext_resource type="Script" path="res://Minions/mana_steal.gd" id="1_8vrm7"]
+[ext_resource type="Texture2D" uid="uid://dfbv5kfn0dyuf" path="res://Art/Minions/TODO_MINION.png" id="2_4p4r3"]
+
+[resource]
+script = ExtResource("1_8vrm7")
+damage = 1
+health = 3
+base_health = 2
+description = "Takes 1 mana and deals %d to every player"
+texture = ExtResource("2_4p4r3")

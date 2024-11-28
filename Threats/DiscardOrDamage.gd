@@ -37,3 +37,6 @@ func is_paid() -> bool:
 func complete(game: Game) -> void:
 	for player in game.players:
 		player.take_damage(damage_to_take)
+
+func set_player_count(count: int) -> void:
+	cards_to_discard  *= count

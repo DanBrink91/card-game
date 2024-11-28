@@ -60,6 +60,7 @@ func setup_game():
 	host_id = Steam.getLobbyOwner(lobby_id)
 	is_host =  host_id == GlobalSteam.steam_id
 	# Seed the random generator
+	# TODO: Might have to sync here........
 	if is_host:
 		randomize()
 		var random_seed = randi()

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="HiveMind" load_steps=3 format=3 uid="uid://bppdt56c0ald8"]
+
+[ext_resource type="Script" path="res://Cards/Hivemind.gd" id="1_ehce1"]
+[ext_resource type="Texture2D" uid="uid://b6lsnpsr7bu14" path="res://Art/Cards/hivemind.png" id="2_dgv70"]
+
+[resource]
+script = ExtResource("1_ehce1")
+damage = 3
+name = "Hive Mind"
+description = "Deals %d damage. If other players have hivemind in their hand, discard those and add that damage to this cast"
+cost = 2
+price = 5
+texture = ExtResource("2_dgv70")
+target_type = 0

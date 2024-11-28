@@ -9,8 +9,8 @@ func get_description() -> String:
 	
 func play(player: Player, target) -> void:
 	print("Iron Card Played")
-	player.money += value
+	player.gain_money(value)
 	
-	for playerIter in player.game.players:
+	for playerIter: Player in player.game.players:
 		if playerIter != player:
-			player.money += money_to_give
+			playerIter.gain_money(money_to_give)

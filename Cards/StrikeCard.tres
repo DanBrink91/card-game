@@ -1,11 +1,13 @@
-[gd_resource type="Resource" script_class="StrikeCard" load_steps=3 format=3 uid="uid://c5li2x1h26lbg"]
+[gd_resource type="Resource" script_class="StrikeCard" load_steps=4 format=3 uid="uid://c5li2x1h26lbg"]
 
 [ext_resource type="Texture2D" uid="uid://bfqm02a8dvu3j" path="res://Art/Cards/infernus_dolphin_112x112.png" id="1_agaf3"]
+[ext_resource type="Resource" uid="uid://2ercynld00ny" path="res://Buffs/PosionDebuff.tres" id="1_uhk80"]
 [ext_resource type="Script" path="res://Cards/StrikeCard.gd" id="1_wianw"]
 
 [resource]
 script = ExtResource("1_wianw")
 damage = 1
+buff = ExtResource("1_uhk80")
 name = "Strike"
 description = "Deals %d Damage"
 cost = 1

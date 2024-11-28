@@ -15,22 +15,41 @@ signal enemy_take_damage(amount: int, source: Player)
 
 @export var threat_scene: PackedScene
 @export var minion_scene: PackedScene
+@export var buff_scene: PackedScene
 
 @export var discard_threat: BaseThreat
 @export var curse_card: BaseCard
 @export var attack_projectile: Texture
 
-@export var first_minions: Array[BaseMinion]
 
 @onready var health_label:  RichTextLabel = $HealthLabel
 @onready var threat_container = $ThreatContainer
 @onready var minion_container = $MinionContainer
+@onready var buff_container  = $BuffContainer
+
 @onready var game: Game = get_parent()
+
+@export_category("Stage 1")
+@export var stage_one_actions: Array[ENEMY_ACTION]
+@export var stage_one_minions: Array[BaseMinion]
+@export var stage_one_threats: Array[BaseThreat]
+
+@export_category("Stage 2")
+@export var stage_two_actions: Array[ENEMY_ACTION]
+@export var stage_two_minions: Array[BaseMinion]
+@export var stage_two_threats: Array[BaseThreat]
+
+@export_category("Stage 3")
+@export var stage_three_actions: Array[ENEMY_ACTION]
+@export var stage_three_minions: Array[BaseMinion]
+@export var stage_three_threats: Array[BaseThreat]
+
 
 var health:int
 var damage:int
 
 var turns_taken := 0
+var current_stage := 1
 
 var player_name := "Fire Demon"
 var is_host: bool = false
@@ -38,7 +57,7 @@ var remote_target_index: int = -1
 
 enum ENEMY_ACTION { LIGHT_STRIKE, MEDIUM_STRIKE, HEAVY_STRIKE,
  CURSE_SINGLE, CURSE_ALL, LIGHT_STRIKE_ALL, MEDIUM_STRIKE_ALL,
- HEAVY_STRIKE_ALL, DISCARD_DAMAGE_THREAT, SUMMON_MINION}
+ HEAVY_STRIKE_ALL, DISCARD_DAMAGE_THREAT, SUMMON_MINION, ADD_THREAT}
 
 var actions : Array[ENEMY_ACTION] = []
 
@@ -46,17 +65,36 @@ var threats: Array = []
 
 var minions: Array
 
+var buffs: Array[BaseBuff]
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	health = starting_health
 	damage = starting_damage
 	update_ui()
-	actions = [ENEMY_ACTION.SUMMON_MINION]
 
 func setup(player_count: int) -> void:
 	health  = starting_health + (player_count - 1) * health_per_player
+	stage_one_actions.shuffle()
+	stage_one_minions.shuffle()
+	stage_one_threats.shuffle()
+	
+	stage_two_minions.shuffle()
+	stage_two_threats.shuffle()
+	
+	stage_three_minions.shuffle()
+	stage_three_threats.shuffle()
+	
+	for minion in stage_one_minions + stage_two_minions + stage_three_minions:
+		minion.set_player_count(player_count)
+	for threat in stage_one_threats + stage_two_threats + stage_three_threats:
+		threat.set_player_count(player_count)
+	actions = stage_one_actions
 
 func take_damage(amount: int, source: Player) -> void:
+	for buff in buffs:
+		amount = buff.on_damage_taking(source, amount)
+	update_buffs()
 	Util.spawn_floating_text("-" + str(amount), global_position, Vector2(0, -45))
 	enemy_take_damage.emit(amount, source)
 	health -= amount
@@ -70,13 +108,22 @@ func update_ui() -> void:
 
 func start_turn() -> void:
 	print("Enemy Turn Start")
+	for buff in buffs:
+		await buff.on_start_turn()
+	update_buffs()
 	# Handle any active threats
 	var threats_to_remove = []
-	for threat in threats:
-		threat.turn_limit -= 1
-		if threat.turn_limit <= 0:
+	for threat: Threat in threats:
+		threat.turns_left -= 1
+		if threat.turns_left <= 0:
 			await threat.complete(game)
 			threats_to_remove.append(threat)
+		else:
+			threat.update_ui()
+	
+	for remove in threats_to_remove:
+		threats.erase(remove)
+	
 	# Handle minions
 	for minion in minions:
 		await minion.take_turn(game)
@@ -92,17 +139,27 @@ func start_turn() -> void:
 		ENEMY_ACTION.CURSE_SINGLE:
 			await single_target_curse()
 		ENEMY_ACTION.CURSE_ALL:
-			pass
+			await curse_all()
 		ENEMY_ACTION.LIGHT_STRIKE_ALL:
-			pass
+			await damage_all(damage)
 		ENEMY_ACTION.MEDIUM_STRIKE_ALL:
-			pass
+			await damage_all(damage + 1)
 		ENEMY_ACTION.HEAVY_STRIKE_ALL:
-			pass
-		ENEMY_ACTION.DISCARD_DAMAGE_THREAT:
-			await add_threat(discard_threat)
+			await damage_all(damage + 3)
+		ENEMY_ACTION.ADD_THREAT:
+			if current_stage == 1:
+				await add_threat(stage_one_threats.pop_back())
+			elif current_stage == 2:
+				await add_threat(stage_two_threats.pop_back())
+			else:
+				await add_threat(stage_three_threats.pop_back())
 		ENEMY_ACTION.SUMMON_MINION:
-			await add_minion(first_minions.pick_random())
+			if current_stage == 1:
+				await add_minion(stage_one_minions.pop_back())
+			elif current_stage == 2:
+				await add_minion(stage_two_minions.pop_back())
+			else:
+				await add_minion(stage_three_minions.pop_back())
 	
 	end_turn()
 
@@ -113,18 +170,22 @@ func single_target_damage(damage: int) -> void:
 		# There are no alive targets the bad guy as won...
 		return
 	
+	var calculated_damage: int = damage
+	for buff in buffs:
+		calculated_damage = buff.on_damage_dealing(target, calculated_damage)
+	update_buffs()
 	var sprite = Sprite2D.new()
 	sprite.texture = attack_projectile
 	sprite.global_position = global_position
 	sprite.rotate(90)
-	sprite.scale += (damage - 1) * Vector2(0.75, 0.75) # Scale sprite 0.25 more for every damage
+	sprite.scale += (calculated_damage - 1) * Vector2(0.75, 0.75) # Scale sprite 0.25 more for every damage
 	get_tree().root.add_child(sprite)
 	
 	var tween = get_tree().create_tween()
 	tween.tween_property(sprite, "global_position", target.global_position, 1.5)
 	await tween.finished
 	sprite.queue_free()
-	target.take_damage(damage)
+	target.take_damage(calculated_damage)
 
 func single_target_curse() -> void:
 	var target := await pick_target()
@@ -145,17 +206,61 @@ func single_target_curse() -> void:
 	
 	target.add_card(curse_card, Player.CARD_LOCATIONS.DISCARD)
 
+func curse_all() -> void:
+	for target: Player in game.players:
+		var sprite = Sprite2D.new()
+		sprite.texture = attack_projectile
+		sprite.global_position = global_position
+		sprite.rotate(90)
+		sprite.modulate = Color(0, 0, 1)
+		get_tree().root.add_child(sprite)
+		
+		var tween = get_tree().create_tween()
+		tween.tween_property(sprite, "global_position", target.global_position, 0.5)
+		await tween.finished
+		sprite.queue_free()
+		
+		target.add_card(curse_card, Player.CARD_LOCATIONS.DISCARD)
+
+func damage_all(damage: int) -> void:
+	for target: Player in game.players.filter(func(player: Player): return player.life > 0):
+		var calculated_damage:int = damage
+		for buff in buffs:
+			calculated_damage = buff.on_damage_dealing(target, calculated_damage)
+		update_buffs()
+		
+		var sprite = Sprite2D.new()
+		sprite.texture = attack_projectile
+		sprite.global_position = global_position
+		sprite.rotate(90)
+		sprite.scale += (damage - 1) * Vector2(0.75, 0.75) # Scale sprite 0.25 more for every damage
+		get_tree().root.add_child(sprite)
+		
+		var tween = get_tree().create_tween()
+		tween.tween_property(sprite, "global_position", target.global_position, 0.5)
+		await tween.finished
+		sprite.queue_free()
+		target.take_damage(damage)
+
 func end_turn() -> void:
 	print("Enemy Turn End")
+	for buff in buffs:
+		await buff.on_end_turn()
+	update_buffs()
 	turns_taken += 1
 	turn_ended.emit()
 
 func decide_action() -> ENEMY_ACTION:
-	if actions.size() <= 1:
-		var action = actions.pop_back()
-		actions = [ENEMY_ACTION.LIGHT_STRIKE, ENEMY_ACTION.MEDIUM_STRIKE, ENEMY_ACTION.HEAVY_STRIKE, ENEMY_ACTION.CURSE_SINGLE]
+	if actions.size() <= 0:
+		if current_stage == 1:
+			actions = stage_two_actions
+			current_stage += 1
+		elif current_stage == 2:
+			actions = stage_three_actions
+			current_stage += 1
+		elif current_stage == 3:
+			actions = [ENEMY_ACTION.HEAVY_STRIKE_ALL]
 		actions.shuffle()
-		return action
 	return actions.pop_back()
 
 func pick_target() -> Player:
@@ -236,3 +341,38 @@ func add_minion(base: BaseMinion) -> void:
 func remove_minion(base: BaseMinion, object) -> void:
 	minions.erase(base)
 	object.queue_free()
+
+func add_buff(buff: BaseBuff, stacks: int) -> void:
+	var new_buff := true
+	print("adding buff, buffs length: %d " % buffs.size())
+	for existing_buff in buffs:
+		#print("Comparing existing %s to new %s" % [existing_buff.get_script(), buff.get])
+		if existing_buff.get_script() == buff.get_script():
+			print("Found existing buff, adding stacks")
+			new_buff = false
+			existing_buff.stacks += stacks
+			update_buffs()
+			break
+	
+	if new_buff:
+		print("NEW BUFF: %s" % buff.get_class())
+		var new_buff_obj: BaseBuff = buff.duplicate()
+		new_buff_obj.owner = self
+		var buff_ui: Buff = buff_scene.instantiate()
+		new_buff_obj.stacks = stacks
+		buff_ui.set_buff(new_buff_obj)
+		buffs.append(new_buff_obj)
+		buff_container.add_child(buff_ui)
+
+func update_buffs() -> void:
+	var buff_index := 0
+	while buff_index < buffs.size():
+		var buff_ui: Buff = buff_container.get_child(buff_index)
+		if buffs[buff_index].expired():
+			print("removing buff")
+			buffs.remove_at(buff_index)
+			buff_container.remove_child(buff_ui)
+			buff_ui.queue_free()
+		else:
+			buff_ui.update()
+			buff_index += 1

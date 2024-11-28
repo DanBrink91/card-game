@@ -6,6 +6,7 @@
 [resource]
 script = ExtResource("1_4321r")
 damage = 3
-health = 10
+health = 4
+base_health = 1
 description = "Deals %d damage to lowest HP player"
 texture = ExtResource("2_qhspu")

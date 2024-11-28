@@ -6,6 +6,7 @@
 [resource]
 script = ExtResource("1_k6h2h")
 heal = 2
-health = 8
+health = 3
+base_health = 1
 description = "Gives main enemy %d health"
 texture = ExtResource("2_eja5d")

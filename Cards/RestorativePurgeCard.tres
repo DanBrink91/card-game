@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="RestorativePurge" load_steps=4 format=3 uid="uid://bwqw8f0us4vei"]
+
+[ext_resource type="Script" path="res://Cards/RestorativePurge.gd" id="1_igdie"]
+[ext_resource type="PackedScene" uid="uid://bparwac5tbwpq" path="res://Scenes/card_modal.tscn" id="1_kipf8"]
+[ext_resource type="Texture2D" uid="uid://c41pv8assr5wd" path="res://Art/Cards/restorative_purge.png" id="3_emxq7"]
+
+[resource]
+script = ExtResource("1_igdie")
+cardModalScene = ExtResource("1_kipf8")
+heal = 2
+name = "Restorative Purge"
+description = "Pick a card to destroy (even this one). On buy heal all players %d. "
+cost = 1
+price = 5
+texture = ExtResource("3_emxq7")
+target_type = 5

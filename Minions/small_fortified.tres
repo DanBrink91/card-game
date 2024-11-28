@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="deal_health" load_steps=3 format=3 uid="uid://b2gwynkx70ch1"]
+
+[ext_resource type="Script" path="res://Minions/deal_health.gd" id="1_v6onh"]
+[ext_resource type="Texture2D" uid="uid://dfbv5kfn0dyuf" path="res://Art/Minions/TODO_MINION.png" id="2_a646y"]
+
+[resource]
+script = ExtResource("1_v6onh")
+health = 1
+base_health = 1
+description = "Deals damage equal to its health. When attacked only takes one damage"
+texture = ExtResource("2_a646y")

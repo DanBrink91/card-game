@@ -7,6 +7,8 @@ signal card_played(card: BaseCard)
 signal damage_taken(amount: int)
 signal player_died
 
+@export var buff_scene: PackedScene
+
 # Starting Data for our Class
 @export var class_data: PlayerClassData
 
@@ -19,6 +21,7 @@ signal player_died
 var HealthLabel: RichTextLabel
 var ManaLabel: RichTextLabel
 var MoneyLabel: RichTextLabel
+@onready var buff_container = $BuffContainer
 
 var player_name:String = "Player 1"
 var life := 10
@@ -39,6 +42,9 @@ var is_remote: bool = false
 var is_host: bool = false
 
 var saved_order: Array # Save the order for deck shuffling when host
+
+# Debuff live here too!
+var buffs: Array[BaseBuff]
 
 var is_alive: bool = true
 func _ready() -> void:
@@ -93,6 +99,9 @@ func add_to_hand(card: BaseCard) -> void:
 	hand.append(card)
 
 func start_turn() -> void:
+	for buff in buffs:
+		await buff.on_start_turn()
+	update_buffs()
 	print("player start turn")
 	if not is_remote:
 		print("starting hand")
@@ -111,6 +120,9 @@ func end_turn() -> void:
 	mana = base_mana
 	money = 0
 	update_ui()
+	for buff in buffs:
+		await buff.on_end_turn()
+	update_buffs()
 
 
 # Discard ALL cards from hand
@@ -138,6 +150,9 @@ func _on_card_played(card: CardNode, target: Node2D) -> void:
 	card_played.emit(data)
 	mana -= data.cost
 	update_ui()
+	for buff in buffs:
+		await buff.on_card_played(data)
+	update_buffs()
 	if find_card_location(data) == CARD_LOCATIONS.HAND: # Make sure card is still in hand before we discard it
 		discard_card(data) # TODO: find it by ID or something??
 
@@ -215,6 +230,9 @@ func draw(amount:int) -> Array[BaseCard]:
 	return drawn_cards
 
 func take_damage(amount:int) -> void:
+	for buff in buffs:
+		amount = buff.on_damage_taking(null, amount) # TODO: Add attacker here..
+	update_buffs()
 	Util.spawn_floating_text("-" + str(amount), global_position + Vector2(50, -50), Vector2(0, -45), 1.5)
 	damage_taken.emit(amount)
 	print("Player taking %s damage" % amount)
@@ -229,11 +247,25 @@ func take_damage(amount:int) -> void:
 		
 	update_ui()
 
+func deal_damage(target: Node2D, amount: int) -> int:
+	for buff in buffs:
+		amount = buff.on_damage_dealing(target, amount)
+	update_buffs()
+	return amount
+
+func gain_money(amount: int) -> void:
+	for buff in buffs:
+		amount = buff.on_money_gain(amount)
+	update_buffs() 
+	money += amount
+	update_ui()
+
 func buy_card(card: BaseCard) -> void:
 	card_bought.emit(card)
 	Util.spawn_floating_text("-" + str(card.price), global_position + Vector2(50, -30), Vector2(0, -45), 1.0, Color.GOLD)
 	money -= card.price
 	add_card(card, CARD_LOCATIONS.DISCARD)
+	card.on_buy(self)
 	update_ui()
 
 func find_card_location(card: BaseCard) -> CARD_LOCATIONS:
@@ -247,3 +279,31 @@ func find_card_location(card: BaseCard) -> CARD_LOCATIONS:
 	if filtered_cards.size() > 0:
 		return CARD_LOCATIONS.DISCARD
 	return CARD_LOCATIONS.NONE
+
+func add_buff(buff: BaseBuff, stacks: int) -> void:
+	var new_buff := true
+	for existing_buff in buffs:
+		if existing_buff == buff:
+			new_buff = false
+			existing_buff.stacks += stacks
+			break
+	
+	if new_buff:
+		var new_buff_obj: BaseBuff = buff.duplicate()
+		var buff_ui: Buff = buff_scene.instantiate()
+		new_buff_obj.stacks = stacks
+		buff_ui.set_buff(new_buff_obj)
+		buffs.append(new_buff_obj)
+		buff_container.add_child(buff_ui)
+
+func update_buffs() -> void:
+	var buff_index := 0
+	while buff_index < buffs.size():
+		var buff_ui: Buff = buff_container.get_child(buff_index)
+		if buffs[buff_index].expired():
+			buffs.remove_at(buff_index)
+			buff_container.remove_child(buff_ui)
+			buff_ui.queue_free()
+		else:
+			buff_ui.update()
+			buff_index += 1

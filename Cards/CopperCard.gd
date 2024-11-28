@@ -6,7 +6,8 @@ class_name CopperCard
 func get_description() -> String:
 	return description % value
 
-func play(player, target) -> void:
+
+func play(player: Player, target) -> void:
 	print("Copper Card Played")
 	if player:
-		player.money += value
+		player.gain_money(value)

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="PillageEffect" load_steps=3 format=3 uid="uid://di7bqu5evngob"]
+
+[ext_resource type="Script" path="res://Buffs/PillageEffect.gd" id="1_2vwve"]
+[ext_resource type="Texture2D" uid="uid://dfev28lwl4ffi" path="res://Art/Buffs/pillage.png" id="1_qg5nw"]
+
+[resource]
+script = ExtResource("1_2vwve")
+name = "Pillage"
+description = "Will gain money when attacking"
+icon = ExtResource("1_qg5nw")

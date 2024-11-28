@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="PainfulCoin" load_steps=3 format=3 uid="uid://dgmtltmsa3687"]
+
+[ext_resource type="Script" path="res://Cards/PainfulCoin.gd" id="1_kfpvw"]
+[ext_resource type="Texture2D" uid="uid://c0jkjkj1oysjc" path="res://Art/Cards/blood_money.png" id="2_8f6g2"]
+
+[resource]
+script = ExtResource("1_kfpvw")
+value = 2
+damage = 2
+name = "Blood Money"
+description = "Gain %d money. When bought take %d damage"
+cost = 0
+price = 2
+texture = ExtResource("2_8f6g2")
+target_type = 5
